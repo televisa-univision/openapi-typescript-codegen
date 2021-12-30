@@ -1,9 +1,9 @@
 {{>header}}
 
-import { AbortController } from 'abort-controller';
-import Blob from 'cross-blob'
+import Blob from 'cross-blob';
 import FormData from 'form-data';
-import fetch, { BodyInit, Headers, RequestInit, Response } from 'node-fetch';
+import { fetch, Headers, Response, AbortController } from 'fetch-h2';
+import { FetchInit, BodyTypes } from 'fetch-h2/dist/lib/core';
 
 import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';

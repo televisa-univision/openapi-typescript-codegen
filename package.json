@@ -60,17 +60,15 @@
         "codecov": "codecov --token=66c30c23-8954-4892-bef9-fbaed0a2e42b"
     },
     "dependencies": {
-        "@types/node-fetch": "^2.5.12",
-        "abort-controller": "^3.0.0",
         "axios": "^0.24.0",
         "camelcase": "^6.2.1",
         "commander": "^8.3.0",
         "cross-blob": "^2.0.1",
+        "fetch-h2": "^3.0.1",
         "form-data": "^4.0.0",
         "handlebars": "^4.7.6",
         "json-schema-ref-parser": "^9.0.7",
         "mkdirp": "^1.0.4",
-        "node-fetch": "^2.6.5",
         "rimraf": "^3.0.2"
     },
     "devDependencies": {

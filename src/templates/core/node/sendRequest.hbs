@@ -1,14 +1,14 @@
 async function sendRequest(
     options: ApiRequestOptions,
     url: string,
-    formData: FormData | undefined,
-    body: BodyInit | undefined,
+    formData: BodyTypes | undefined,
+    body: BodyTypes | undefined,
     headers: Headers,
     onCancel: OnCancel
 ): Promise<Response> {
     const controller = new AbortController();
 
-    const request: RequestInit = {
+    const request: Partial<FetchInit> = {
         headers,
         method: options.method,
         body: body || formData,

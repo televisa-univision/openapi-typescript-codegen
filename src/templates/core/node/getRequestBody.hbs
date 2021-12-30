@@ -1,4 +1,4 @@
-function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
+function getRequestBody(options: ApiRequestOptions): BodyTypes | undefined {
     if (options.body) {
         if (options.mediaType?.includes('/json')) {
             return JSON.stringify(options.body)
