@@ -1,0 +1,21 @@
+async function getRequestBody(options: ApiRequestOptions): Promise<string | Buffer | undefined> {
+    const formData = getFormData(options);
+
+    if (formData) {
+        return formData.toString();
+    }
+
+    if (options.body) {
+        if (options.mediaType?.includes('/json')) {
+            return JSON.stringify(options.body);
+        } else if (isBlob(options.body)) {
+            return Buffer.isBuffer(options.body) ? options.body : Buffer.from(types.isArrayBuffer(options.body) ? options.body : Buffer.from(await options.body.arrayBuffer()));
+        } else if (isString(options.body)) {
+            return options.body;
+        } else {
+            return JSON.stringify(options.body);
+        }
+    }
+
+    return;
+}

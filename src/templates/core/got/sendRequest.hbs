@@ -1,0 +1,16 @@
+async function sendRequest(options: ApiRequestOptions, url: string, onCancel: OnCancel): Promise<Response<unknown>> {
+    const gotOptions: OptionsOfUnknownResponseBody = {
+        method: options.method,
+        headers: await getHeaders(options),
+        body: await getRequestBody(options),
+        throwHttpErrors: false,
+        timeout: OpenAPI.TIMEOUT,
+        retry: OpenAPI.RETRY,
+    };
+
+    const request = got(url, gotOptions);
+
+    onCancel(() => request.cancel());
+
+    return await request;
+}

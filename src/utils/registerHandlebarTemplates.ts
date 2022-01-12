@@ -17,6 +17,12 @@ import fetchGetResponseBody from '../templates/core/fetch/getResponseBody.hbs';
 import fetchGetResponseHeader from '../templates/core/fetch/getResponseHeader.hbs';
 import fetchRequest from '../templates/core/fetch/request.hbs';
 import fetchSendRequest from '../templates/core/fetch/sendRequest.hbs';
+import gotGetHeaders from '../templates/core/got/getHeaders.hbs';
+import gotGetRequestBody from '../templates/core/got/getRequestBody.hbs';
+import gotGetResponseBody from '../templates/core/got/getResponseBody.hbs';
+import gotGetResponseHeader from '../templates/core/got/getResponseHeader.hbs';
+import gotRequest from '../templates/core/got/request.hbs';
+import gotSendRequest from '../templates/core/got/sendRequest.hbs';
 import functionBase64 from '../templates/core/functions/base64.hbs';
 import functionCatchErrors from '../templates/core/functions/catchErrors.hbs';
 import functionGetFormData from '../templates/core/functions/getFormData.hbs';
@@ -196,6 +202,14 @@ export function registerHandlebarTemplates(root: {
     Handlebars.registerPartial('axios/getResponseHeader', Handlebars.template(axiosGetResponseHeader));
     Handlebars.registerPartial('axios/sendRequest', Handlebars.template(axiosSendRequest));
     Handlebars.registerPartial('axios/request', Handlebars.template(axiosRequest));
+
+    // Specific files for the goot client implementation
+    Handlebars.registerPartial('got/getHeaders', Handlebars.template(gotGetHeaders));
+    Handlebars.registerPartial('got/getRequestBody', Handlebars.template(gotGetRequestBody));
+    Handlebars.registerPartial('got/getResponseBody', Handlebars.template(gotGetResponseBody));
+    Handlebars.registerPartial('got/getResponseHeader', Handlebars.template(gotGetResponseHeader));
+    Handlebars.registerPartial('got/sendRequest', Handlebars.template(gotSendRequest));
+    Handlebars.registerPartial('got/request', Handlebars.template(gotRequest));
 
     return templates;
 }
