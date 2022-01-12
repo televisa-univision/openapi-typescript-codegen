@@ -2,6 +2,8 @@
 
 import got, { Response, OptionsOfUnknownResponseBody } from 'got';
 import { types } from 'util';
+import FormData from 'form-data';
+import Blob from 'cross-blob';
 
 import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';

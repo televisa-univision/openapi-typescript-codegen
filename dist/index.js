@@ -2836,7 +2836,7 @@ var gotRequest = {"compiler":[8,">= 4.3.0"],"main":function(container,depth0,hel
     };
 
   return ((stack1 = container.invokePartial(lookupProperty(partials,"header"),depth0,{"name":"header","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "\nimport got, { Response, OptionsOfUnknownResponseBody } from 'got';\nimport { types } from 'util';\n\nimport { ApiError } from './ApiError';\nimport type { ApiRequestOptions } from './ApiRequestOptions';\nimport type { ApiResult } from './ApiResult';\nimport { CancelablePromise } from './CancelablePromise';\nimport type { OnCancel } from './CancelablePromise';\nimport { OpenAPI } from './OpenAPI';\n\n"
+    + "\nimport got, { Response, OptionsOfUnknownResponseBody } from 'got';\nimport { types } from 'util';\nimport FormData from 'form-data';\nimport Blob from 'cross-blob';\n\nimport { ApiError } from './ApiError';\nimport type { ApiRequestOptions } from './ApiRequestOptions';\nimport type { ApiResult } from './ApiResult';\nimport { CancelablePromise } from './CancelablePromise';\nimport type { OnCancel } from './CancelablePromise';\nimport { OpenAPI } from './OpenAPI';\n\n"
     + ((stack1 = container.invokePartial(lookupProperty(partials,"functions/isDefined"),depth0,{"name":"functions/isDefined","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
     + "\n\n"
     + ((stack1 = container.invokePartial(lookupProperty(partials,"functions/isString"),depth0,{"name":"functions/isString","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
@@ -2872,7 +2872,7 @@ var gotRequest = {"compiler":[8,">= 4.3.0"],"main":function(container,depth0,hel
 },"usePartial":true,"useData":true};
 
 var gotSendRequest = {"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "async function sendRequest(options: ApiRequestOptions, url: string, onCancel: OnCancel): Promise<Response<unknown>> {\n    const gotOptions: OptionsOfUnknownResponseBody = {\n        method: options.method,\n        headers: await getHeaders(options),\n        body: await getRequestBody(options),\n        throwHttpErrors: false,\n        timeout: OpenAPI.TIMEOUT,\n        retry: OpenAPI.RETRY,\n    };\n\n    const request = got(url, gotOptions);\n\n    onCancel(() => request.cancel());\n\n    return await request;\n}";
+    return "async function sendRequest(options: ApiRequestOptions, url: string, onCancel: OnCancel): Promise<Response<unknown>> {\n    const gotOptions: OptionsOfUnknownResponseBody = {\n        method: options.method,\n        headers: await getHeaders(options),\n        body: await getRequestBody(options),\n        throwHttpErrors: false,\n        timeout: OpenAPI.GOT_TIMEOUT,\n        retry: OpenAPI.GOT_RETRY,\n    };\n\n    const request = got(url, gotOptions);\n\n    onCancel(() => request.cancel());\n\n    return await request;\n}";
 },"useData":true};
 
 var functionBase64 = {"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -2996,11 +2996,11 @@ var templateCoreSettings = {"compiler":[8,">= 4.3.0"],"main":function(container,
     };
 
   return ((stack1 = container.invokePartial(lookupProperty(partials,"header"),depth0,{"name":"header","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "\nimport type { ApiRequestOptions } from './ApiRequestOptions';\n\ntype Resolver<T> = (options: ApiRequestOptions) => Promise<T>;\ntype Headers = Record<string, string>;\n\ntype Config = {\n    BASE: string;\n    VERSION: string;\n    WITH_CREDENTIALS: boolean;\n    CREDENTIALS: 'include' | 'omit' | 'same-origin';\n    TOKEN?: string | Resolver<string>;\n    USERNAME?: string | Resolver<string>;\n    PASSWORD?: string | Resolver<string>;\n    HEADERS?: Headers | Resolver<Headers>;\n    ENCODE_PATH?: (path: string) => string;\n    TIMEOUT?: number;\n    RETRY?: number;\n}\n\nexport const OpenAPI: Config = {\n    BASE: '"
-    + ((stack1 = alias2(alias1(depth0, "server", {"start":{"line":23,"column":14},"end":{"line":23,"column":20}} ), depth0)) != null ? stack1 : "")
+    + "\nimport type { ApiRequestOptions } from './ApiRequestOptions';\nimport type { RequiredRetryOptions } from \"got\";\n\ntype Resolver<T> = (options: ApiRequestOptions) => Promise<T>;\ntype Headers = Record<string, string>;\n\nexport interface Delays {\n    lookup?: number;\n    connect?: number;\n    secureConnect?: number;\n    socket?: number;\n    response?: number;\n    send?: number;\n    request?: number;\n}\n\ntype Config = {\n    BASE: string;\n    VERSION: string;\n    WITH_CREDENTIALS: boolean;\n    CREDENTIALS: 'include' | 'omit' | 'same-origin';\n    TOKEN?: string | Resolver<string>;\n    USERNAME?: string | Resolver<string>;\n    PASSWORD?: string | Resolver<string>;\n    HEADERS?: Headers | Resolver<Headers>;\n    ENCODE_PATH?: (path: string) => string;\n    GOT_TIMEOUT?: Delays | number;\n    GOT_RETRY?: Partial<RequiredRetryOptions> | number;\n}\n\nexport const OpenAPI: Config = {\n    BASE: '"
+    + ((stack1 = alias2(alias1(depth0, "server", {"start":{"line":34,"column":14},"end":{"line":34,"column":20}} ), depth0)) != null ? stack1 : "")
     + "',\n    VERSION: '"
-    + ((stack1 = alias2(alias1(depth0, "version", {"start":{"line":24,"column":17},"end":{"line":24,"column":24}} ), depth0)) != null ? stack1 : "")
-    + "',\n    WITH_CREDENTIALS: false,\n    CREDENTIALS: 'include',\n    TOKEN: undefined,\n    USERNAME: undefined,\n    PASSWORD: undefined,\n    HEADERS: undefined,\n    ENCODE_PATH: undefined,\n    TIMEOUT: undefined,\n    RETRY: undefined,\n};";
+    + ((stack1 = alias2(alias1(depth0, "version", {"start":{"line":35,"column":17},"end":{"line":35,"column":24}} ), depth0)) != null ? stack1 : "")
+    + "',\n    WITH_CREDENTIALS: false,\n    CREDENTIALS: 'include',\n    TOKEN: undefined,\n    USERNAME: undefined,\n    PASSWORD: undefined,\n    HEADERS: undefined,\n    ENCODE_PATH: undefined,\n    GOT_TIMEOUT: undefined,\n    GOT_RETRY: undefined,\n};";
 },"usePartial":true,"useData":true};
 
 var templateCoreRequest = {"1":function(container,depth0,helpers,partials,data) {

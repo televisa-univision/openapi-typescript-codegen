@@ -1,9 +1,20 @@
 {{>header}}
 
 import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { RequiredRetryOptions } from "got";
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
+
+export interface Delays {
+    lookup?: number;
+    connect?: number;
+    secureConnect?: number;
+    socket?: number;
+    response?: number;
+    send?: number;
+    request?: number;
+}
 
 type Config = {
     BASE: string;
@@ -15,8 +26,8 @@ type Config = {
     PASSWORD?: string | Resolver<string>;
     HEADERS?: Headers | Resolver<Headers>;
     ENCODE_PATH?: (path: string) => string;
-    TIMEOUT?: number;
-    RETRY?: number;
+    GOT_TIMEOUT?: Delays | number;
+    GOT_RETRY?: Partial<RequiredRetryOptions> | number;
 }
 
 export const OpenAPI: Config = {
@@ -29,6 +40,6 @@ export const OpenAPI: Config = {
     PASSWORD: undefined,
     HEADERS: undefined,
     ENCODE_PATH: undefined,
-    TIMEOUT: undefined,
-    RETRY: undefined,
+    GOT_TIMEOUT: undefined,
+    GOT_RETRY: undefined,
 };

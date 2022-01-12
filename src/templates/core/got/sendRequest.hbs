@@ -4,8 +4,8 @@ async function sendRequest(options: ApiRequestOptions, url: string, onCancel: On
         headers: await getHeaders(options),
         body: await getRequestBody(options),
         throwHttpErrors: false,
-        timeout: OpenAPI.TIMEOUT,
-        retry: OpenAPI.RETRY,
+        timeout: OpenAPI.GOT_TIMEOUT,
+        retry: OpenAPI.GOT_RETRY,
     };
 
     const request = got(url, gotOptions);
