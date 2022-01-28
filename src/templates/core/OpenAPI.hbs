@@ -2,6 +2,8 @@
 
 import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { RequiredRetryOptions } from "got";
+import { Agent as HttpsAgent } from "https";
+import { Agent as HttpAgent } from "http";
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
@@ -28,6 +30,8 @@ type Config = {
     ENCODE_PATH?: (path: string) => string;
     GOT_TIMEOUT?: Delays | number;
     GOT_RETRY?: Partial<RequiredRetryOptions> | number;
+    HTTPS_AGENT?: HttpsAgent;
+    HTTP_AGENT?: HttpAgent;
 }
 
 export const OpenAPI: Config = {
@@ -42,4 +46,6 @@ export const OpenAPI: Config = {
     ENCODE_PATH: undefined,
     GOT_TIMEOUT: undefined,
     GOT_RETRY: undefined,
+    HTTPS_AGENT: undefined,
+    HTTP_AGENT: undefined,
 };

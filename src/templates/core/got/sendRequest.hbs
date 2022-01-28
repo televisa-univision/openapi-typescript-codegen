@@ -6,6 +6,10 @@ async function sendRequest(options: ApiRequestOptions, url: string, onCancel: On
         throwHttpErrors: false,
         timeout: OpenAPI.GOT_TIMEOUT,
         retry: OpenAPI.GOT_RETRY,
+        agent: {
+            https: OpenAPI.HTTPS_AGENT,
+            http: OpenAPI.HTTP_AGENT,
+        },
     };
 
     const request = got(url, gotOptions);
