@@ -2880,7 +2880,7 @@ var functionBase64 = {"compiler":[8,">= 4.3.0"],"main":function(container,depth0
 },"useData":true};
 
 var functionCatchErrors = {"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "function catchErrors(options: ApiRequestOptions, result: ApiResult): void {\n    const errors: Record<number, string> = {\n        400: 'Bad Request',\n        401: 'Unauthorized',\n        403: 'Forbidden',\n        404: 'Not Found',\n        500: 'Internal Server Error',\n        502: 'Bad Gateway',\n        503: 'Service Unavailable',\n        ...options.errors,\n    }\n\n    const error = errors[result.status];\n    if (error) {\n        throw new ApiError(result, error);\n    }\n\n    if (!result.ok) {\n        throw new ApiError(result, 'Generic Error');\n    }\n}";
+    return "function catchErrors(options: ApiRequestOptions, result: ApiResult): void {\n    const errors: Record<number, string> = {\n        400: 'Bad Request',\n        401: 'Unauthorized',\n        403: 'Forbidden',\n        404: 'Not Found',\n        451: 'Unavailable For Legal Reasons',\n        500: 'Internal Server Error',\n        502: 'Bad Gateway',\n        503: 'Service Unavailable',\n        ...options.errors,\n    }\n\n    const error = errors[result.status];\n    if (error) {\n        throw new ApiError(result, error);\n    }\n\n    if (!result.ok) {\n        throw new ApiError(result, 'Generic Error');\n    }\n}";
 },"useData":true};
 
 var functionGetFormData = {"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
