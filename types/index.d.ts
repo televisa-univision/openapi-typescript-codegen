@@ -1,3 +1,5 @@
+import CircuitBreaker from 'opossum';
+
 export declare enum HttpClient {
     FETCH = 'fetch',
     XHR = 'xhr',
@@ -18,6 +20,7 @@ export type Options = {
     exportSchemas?: boolean;
     request?: string;
     write?: boolean;
+    circuitBreaker?: CircuitBreaker.Options;
 };
 
 export declare function generate(options: Options): Promise<void>;
