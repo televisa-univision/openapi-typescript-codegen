@@ -13,11 +13,7 @@ import { OpenAPI } from '../core/OpenAPI';
 {{/if}}
 
 export class {{{name}}}{{{@root.postfix}}} {
-    static circuitBreakerOptions = {
-        timeout: 5000,
-        errorThresholdPercentage: 50,
-        resetTimeout: 60000,
-    };
+    static circuitBreakerOptions = {{#if circuitBreakerOptions}}{{circuitBreakerOptions}}{{~else}}undefined{{/if}};
 
     {{#each operations}}
     static {{{name}}}CircuitBreaker = new CircuitBreaker(({{>parameters}}) => {

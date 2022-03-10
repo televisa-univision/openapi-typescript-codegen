@@ -24,7 +24,7 @@ export type Options = {
     postfix?: string;
     request?: string;
     write?: boolean;
-    circuitBreakerOptions?: CircuitBreaker.Options;
+    circuitBreaker?: CircuitBreaker.Options;
 };
 
 /**
@@ -57,7 +57,7 @@ export async function generate({
     postfix = 'Service',
     request,
     write = true,
-    circuitBreakerOptions,
+    circuitBreaker,
 }: Options): Promise<void> {
     const openApi = isString(input) ? await getOpenApiSpec(input) : input;
     const openApiVersion = getOpenApiVersion(openApi);
@@ -84,7 +84,8 @@ export async function generate({
                 exportModels,
                 exportSchemas,
                 postfix,
-                request
+                request,
+                circuitBreaker,
             );
             break;
         }
@@ -105,7 +106,8 @@ export async function generate({
                 exportModels,
                 exportSchemas,
                 postfix,
-                request
+                request,
+                circuitBreaker,
             );
             break;
         }
