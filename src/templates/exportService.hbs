@@ -12,68 +12,68 @@ import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 {{/if}}
 
+const circuitBreakerOptions = {{#if circuitBreakerOptions}}{{circuitBreakerOptions}}{{~else}}undefined{{/if}};
+
+{{#each operations}}
+const {{{name}}}CircuitBreaker = new CircuitBreaker(({{>parameters}}) => {
+    return __request({
+        method: '{{{method}}}',
+        path: `{{{path}}}`,
+        {{#if parametersCookie}}
+        cookies: {
+            {{#each parametersCookie}}
+            '{{{prop}}}': {{{name}}},
+            {{/each}}
+        },
+        {{/if}}
+        {{#if parametersHeader}}
+        headers: {
+            {{#each parametersHeader}}
+            '{{{prop}}}': {{{name}}},
+            {{/each}}
+        },
+        {{/if}}
+        {{#if parametersQuery}}
+        query: {
+            {{#each parametersQuery}}
+            '{{{prop}}}': {{{name}}},
+            {{/each}}
+        },
+        {{/if}}
+        {{#if parametersForm}}
+        formData: {
+            {{#each parametersForm}}
+            '{{{prop}}}': {{{name}}},
+            {{/each}}
+        },
+        {{/if}}
+        {{#if parametersBody}}
+        {{#equals parametersBody.in 'formData'}}
+        formData: {{{parametersBody.name}}},
+        {{/equals}}
+        {{#equals parametersBody.in 'body'}}
+        body: {{{parametersBody.name}}},
+        {{/equals}}
+        {{#if parametersBody.mediaType}}
+        mediaType: '{{{parametersBody.mediaType}}}',
+        {{/if}}
+        {{/if}}
+        {{#if responseHeader}}
+        responseHeader: '{{{responseHeader}}}',
+        {{/if}}
+        {{#if errors}}
+        errors: {
+            {{#each errors}}
+            {{{code}}}: `{{{description}}}`,
+            {{/each}}
+        },
+        {{/if}}
+    }) as Promise<{{>result}}>;
+}, circuitBreakerOptions);
+
+{{/each}}
+
 export class {{{name}}}{{{@root.postfix}}} {
-    static circuitBreakerOptions = {{#if circuitBreakerOptions}}{{circuitBreakerOptions}}{{~else}}undefined{{/if}};
-
-    {{#each operations}}
-    static {{{name}}}CircuitBreaker = new CircuitBreaker(({{>parameters}}) => {
-        return __request({
-            method: '{{{method}}}',
-            path: `{{{path}}}`,
-            {{#if parametersCookie}}
-            cookies: {
-                {{#each parametersCookie}}
-                '{{{prop}}}': {{{name}}},
-                {{/each}}
-            },
-            {{/if}}
-            {{#if parametersHeader}}
-            headers: {
-                {{#each parametersHeader}}
-                '{{{prop}}}': {{{name}}},
-                {{/each}}
-            },
-            {{/if}}
-            {{#if parametersQuery}}
-            query: {
-                {{#each parametersQuery}}
-                '{{{prop}}}': {{{name}}},
-                {{/each}}
-            },
-            {{/if}}
-            {{#if parametersForm}}
-            formData: {
-                {{#each parametersForm}}
-                '{{{prop}}}': {{{name}}},
-                {{/each}}
-            },
-            {{/if}}
-            {{#if parametersBody}}
-            {{#equals parametersBody.in 'formData'}}
-            formData: {{{parametersBody.name}}},
-            {{/equals}}
-            {{#equals parametersBody.in 'body'}}
-            body: {{{parametersBody.name}}},
-            {{/equals}}
-            {{#if parametersBody.mediaType}}
-            mediaType: '{{{parametersBody.mediaType}}}',
-            {{/if}}
-            {{/if}}
-            {{#if responseHeader}}
-            responseHeader: '{{{responseHeader}}}',
-            {{/if}}
-            {{#if errors}}
-            errors: {
-                {{#each errors}}
-                {{{code}}}: `{{{description}}}`,
-                {{/each}}
-            },
-            {{/if}}
-        }) as Promise<{{>result}}>;
-    }, this.circuitBreakerOptions);
-
-    {{/each}}
-
     {{#each operations}}
     /**
     {{#if deprecated}}
@@ -98,7 +98,7 @@ export class {{{name}}}{{{@root.postfix}}} {
      * @throws ApiError
      */
     public static {{{name}}}({{>parameters}}): Promise<{{>result}}> {
-        return this.{{{name}}}CircuitBreaker.fire({{>arguments}});
+        return {{{name}}}CircuitBreaker.fire({{>arguments}});
     }
 
     {{/each}}
