@@ -177,9 +177,22 @@ exports[`v2 should generate: ./test/generated/v2/core/OpenAPI.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { RequiredRetryOptions } from \\"got\\";
+import { Agent as HttpsAgent } from \\"https\\";
+import { Agent as HttpAgent } from \\"http\\";
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
+
+export interface Delays {
+    lookup?: number;
+    connect?: number;
+    secureConnect?: number;
+    socket?: number;
+    response?: number;
+    send?: number;
+    request?: number;
+}
 
 type Config = {
     BASE: string;
@@ -191,6 +204,10 @@ type Config = {
     PASSWORD?: string | Resolver<string>;
     HEADERS?: Headers | Resolver<Headers>;
     ENCODE_PATH?: (path: string) => string;
+    GOT_TIMEOUT?: Delays | number;
+    GOT_RETRY?: Partial<RequiredRetryOptions> | number;
+    HTTPS_AGENT?: HttpsAgent;
+    HTTP_AGENT?: HttpAgent;
 }
 
 export const OpenAPI: Config = {
@@ -203,6 +220,10 @@ export const OpenAPI: Config = {
     PASSWORD: undefined,
     HEADERS: undefined,
     ENCODE_PATH: undefined,
+    GOT_TIMEOUT: undefined,
+    GOT_RETRY: undefined,
+    HTTPS_AGENT: undefined,
+    HTTP_AGENT: undefined,
 };"
 `;
 
@@ -433,6 +454,7 @@ function catchErrors(options: ApiRequestOptions, result: ApiResult): void {
         401: 'Unauthorized',
         403: 'Forbidden',
         404: 'Not Found',
+        451: 'Unavailable For Legal Reasons',
         500: 'Internal Server Error',
         502: 'Bad Gateway',
         503: 'Service Unavailable',
@@ -2881,9 +2903,22 @@ exports[`v3 should generate: ./test/generated/v3/core/OpenAPI.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { RequiredRetryOptions } from \\"got\\";
+import { Agent as HttpsAgent } from \\"https\\";
+import { Agent as HttpAgent } from \\"http\\";
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
+
+export interface Delays {
+    lookup?: number;
+    connect?: number;
+    secureConnect?: number;
+    socket?: number;
+    response?: number;
+    send?: number;
+    request?: number;
+}
 
 type Config = {
     BASE: string;
@@ -2895,6 +2930,10 @@ type Config = {
     PASSWORD?: string | Resolver<string>;
     HEADERS?: Headers | Resolver<Headers>;
     ENCODE_PATH?: (path: string) => string;
+    GOT_TIMEOUT?: Delays | number;
+    GOT_RETRY?: Partial<RequiredRetryOptions> | number;
+    HTTPS_AGENT?: HttpsAgent;
+    HTTP_AGENT?: HttpAgent;
 }
 
 export const OpenAPI: Config = {
@@ -2907,6 +2946,10 @@ export const OpenAPI: Config = {
     PASSWORD: undefined,
     HEADERS: undefined,
     ENCODE_PATH: undefined,
+    GOT_TIMEOUT: undefined,
+    GOT_RETRY: undefined,
+    HTTPS_AGENT: undefined,
+    HTTP_AGENT: undefined,
 };"
 `;
 
@@ -3137,6 +3180,7 @@ function catchErrors(options: ApiRequestOptions, result: ApiResult): void {
         401: 'Unauthorized',
         403: 'Forbidden',
         404: 'Not Found',
+        451: 'Unavailable For Legal Reasons',
         500: 'Internal Server Error',
         502: 'Bad Gateway',
         503: 'Service Unavailable',
