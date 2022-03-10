@@ -7,6 +7,7 @@ import { isString } from './utils/isString';
 import { postProcessClient } from './utils/postProcessClient';
 import { registerHandlebarTemplates } from './utils/registerHandlebarTemplates';
 import { writeClient } from './utils/writeClient';
+import CircuitBreaker from 'opossum';
 
 export { HttpClient } from './HttpClient';
 
@@ -23,6 +24,7 @@ export type Options = {
     postfix?: string;
     request?: string;
     write?: boolean;
+    circuitBreakerOptions?: CircuitBreaker.Options;
 };
 
 /**
@@ -55,6 +57,7 @@ export async function generate({
     postfix = 'Service',
     request,
     write = true,
+    circuitBreakerOptions,
 }: Options): Promise<void> {
     const openApi = isString(input) ? await getOpenApiSpec(input) : input;
     const openApiVersion = getOpenApiVersion(openApi);

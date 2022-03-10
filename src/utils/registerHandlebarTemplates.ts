@@ -53,6 +53,7 @@ import templateExportModel from '../templates/exportModel.hbs';
 import templateExportSchema from '../templates/exportSchema.hbs';
 import templateExportService from '../templates/exportService.hbs';
 import templateIndex from '../templates/index.hbs';
+import partialArguments from '../templates/partials/arguments.hbs';
 import partialBase from '../templates/partials/base.hbs';
 import partialExportComposition from '../templates/partials/exportComposition.hbs';
 import partialExportEnum from '../templates/partials/exportEnum.hbs';
@@ -129,6 +130,7 @@ export function registerHandlebarTemplates(root: {
     };
 
     // Partials for the generations of the models, services, etc.
+    Handlebars.registerPartial('arguments', Handlebars.template(partialArguments));
     Handlebars.registerPartial('exportEnum', Handlebars.template(partialExportEnum));
     Handlebars.registerPartial('exportInterface', Handlebars.template(partialExportInterface));
     Handlebars.registerPartial('exportComposition', Handlebars.template(partialExportComposition));
