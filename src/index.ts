@@ -7,7 +7,6 @@ import { isString } from './utils/isString';
 import { postProcessClient } from './utils/postProcessClient';
 import { registerHandlebarTemplates } from './utils/registerHandlebarTemplates';
 import { writeClient } from './utils/writeClient';
-import CircuitBreaker from 'opossum';
 
 export { HttpClient } from './HttpClient';
 

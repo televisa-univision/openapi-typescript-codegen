@@ -1,5 +1,3 @@
-import CircuitBreaker from 'opossum';
-
 export declare enum HttpClient {
     FETCH = 'fetch',
     XHR = 'xhr',

@@ -1,5 +1,4 @@
 import { resolve } from 'path';
-import CircuitBreaker from 'opossum';
 
 import type { Service } from '../client/interfaces/Service';
 import { HttpClient } from '../HttpClient';
