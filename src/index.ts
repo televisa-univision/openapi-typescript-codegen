@@ -24,7 +24,7 @@ export type Options = {
     postfix?: string;
     request?: string;
     write?: boolean;
-    circuitBreaker?: CircuitBreaker.Options;
+    circuitBreaker?: string;
 };
 
 /**

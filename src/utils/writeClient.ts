@@ -41,7 +41,7 @@ export async function writeClient(
     exportSchemas: boolean,
     postfix: string,
     request?: string,
-    circuitBreakerOptions?: CircuitBreaker.Options,
+    circuitBreakerOptions?: string
 ): Promise<void> {
     const outputPath = resolve(process.cwd(), output);
     const outputPathCore = resolve(outputPath, 'core');

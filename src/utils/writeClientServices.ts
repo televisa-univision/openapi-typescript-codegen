@@ -27,7 +27,7 @@ export async function writeClientServices(
     useUnionTypes: boolean,
     useOptions: boolean,
     postfix: string,
-    circuitBreakerOptions?: CircuitBreaker.Options,
+    circuitBreakerOptions?: string,
 ): Promise<void> {
     for (const service of services) {
         const file = resolve(outputPath, `${service.name}${postfix}.ts`);
@@ -39,7 +39,7 @@ export async function writeClientServices(
             useVersion,
             useOptions,
             postfix,
-            circuitBreakerOptions: JSON.stringify(circuitBreakerOptions, null, 4),
+            circuitBreakerOptions,
         });
         await writeFile(file, format(templateResult));
     }
