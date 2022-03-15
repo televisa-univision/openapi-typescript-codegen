@@ -1,5 +1,4 @@
 import { resolve } from 'path';
-import CircuitBreaker from 'opossum';
 
 import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
@@ -41,7 +40,7 @@ export async function writeClient(
     exportSchemas: boolean,
     postfix: string,
     request?: string,
-    circuitBreakerOptions?: CircuitBreaker.Options,
+    circuitBreakerOptions?: string
 ): Promise<void> {
     const outputPath = resolve(process.cwd(), output);
     const outputPathCore = resolve(outputPath, 'core');

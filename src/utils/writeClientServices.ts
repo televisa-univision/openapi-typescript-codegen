@@ -1,5 +1,4 @@
 import { resolve } from 'path';
-import CircuitBreaker from 'opossum';
 
 import type { Service } from '../client/interfaces/Service';
 import { HttpClient } from '../HttpClient';
@@ -27,7 +26,7 @@ export async function writeClientServices(
     useUnionTypes: boolean,
     useOptions: boolean,
     postfix: string,
-    circuitBreakerOptions?: CircuitBreaker.Options,
+    circuitBreakerOptions?: string,
 ): Promise<void> {
     for (const service of services) {
         const file = resolve(outputPath, `${service.name}${postfix}.ts`);
@@ -39,7 +38,7 @@ export async function writeClientServices(
             useVersion,
             useOptions,
             postfix,
-            circuitBreakerOptions: JSON.stringify(circuitBreakerOptions, null, 4),
+            circuitBreakerOptions,
         });
         await writeFile(file, format(templateResult));
     }

@@ -5403,7 +5403,8 @@ async function writeClientServices(services, templates, outputPath, httpClient, 
             useUnionTypes,
             useVersion,
             useOptions,
-            postfix, circuitBreakerOptions: JSON.stringify(circuitBreakerOptions, null, 4) }));
+            postfix,
+            circuitBreakerOptions }));
         await writeFile(file, format(templateResult));
     }
 }
