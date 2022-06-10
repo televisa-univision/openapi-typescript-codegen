@@ -2014,12 +2014,35 @@ exports[`v2 should generate: ./test/generated/v2/services/CollectionFormatServic
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class CollectionFormatService {
+const circuitBreakerOptions = undefined;
 
+const collectionFormatCircuitBreaker = new CircuitBreaker((
+    parameterArrayCsv: Array<string>,
+    parameterArraySsv: Array<string>,
+    parameterArrayTsv: Array<string>,
+    parameterArrayPipes: Array<string>,
+    parameterArrayMulti: Array<string>,
+) => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/collectionFormat\`,
+        query: {
+            'parameterArrayCSV': parameterArrayCsv,
+            'parameterArraySSV': parameterArraySsv,
+            'parameterArrayTSV': parameterArrayTsv,
+            'parameterArrayPipes': parameterArrayPipes,
+            'parameterArrayMulti': parameterArrayMulti,
+        },
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class CollectionFormatService {
     /**
      * @param parameterArrayCsv This is an array parameter that is send as csv format (comma-separated values)
      * @param parameterArraySsv This is an array parameter that is send as ssv format (space-separated values)
@@ -2034,18 +2057,14 @@ export class CollectionFormatService {
         parameterArrayTsv: Array<string>,
         parameterArrayPipes: Array<string>,
         parameterArrayMulti: Array<string>,
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/collectionFormat\`,
-            query: {
-                'parameterArrayCSV': parameterArrayCsv,
-                'parameterArraySSV': parameterArraySsv,
-                'parameterArrayTSV': parameterArrayTsv,
-                'parameterArrayPipes': parameterArrayPipes,
-                'parameterArrayMulti': parameterArrayMulti,
-            },
-        });
+    ): Promise<void> {
+        return collectionFormatCircuitBreaker.fire(
+            parameterArrayCsv,
+            parameterArraySsv,
+            parameterArrayTsv,
+            parameterArrayPipes,
+            parameterArrayMulti,
+        );
     }
 
 }"
@@ -2055,13 +2074,40 @@ exports[`v2 should generate: ./test/generated/v2/services/ComplexService.ts 1`] 
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import CircuitBreaker from 'opossum';
+
 import type { ModelWithString } from '../models/ModelWithString';
-import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class ComplexService {
+const circuitBreakerOptions = undefined;
 
+const complexTypesCircuitBreaker = new CircuitBreaker((
+    parameterObject: {
+        first?: {
+            second?: {
+                third?: string;
+            };
+        };
+    },
+    parameterReference: ModelWithString,
+) => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/complex\`,
+        query: {
+            'parameterObject': parameterObject,
+            'parameterReference': parameterReference,
+        },
+        errors: {
+            400: \`400 server error\`,
+            500: \`500 server error\`,
+        },
+    }) as Promise<Array<ModelWithString>>;
+}, circuitBreakerOptions);
+
+
+export class ComplexService {
     /**
      * @param parameterObject Parameter containing object
      * @param parameterReference Parameter containing reference
@@ -2077,19 +2123,11 @@ export class ComplexService {
             };
         },
         parameterReference: ModelWithString,
-    ): CancelablePromise<Array<ModelWithString>> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/complex\`,
-            query: {
-                'parameterObject': parameterObject,
-                'parameterReference': parameterReference,
-            },
-            errors: {
-                400: \`400 server error\`,
-                500: \`500 server error\`,
-            },
-        });
+    ): Promise<Array<ModelWithString>> {
+        return complexTypesCircuitBreaker.fire(
+            parameterObject,
+            parameterReference,
+        );
     }
 
 }"
@@ -2099,13 +2137,86 @@ exports[`v2 should generate: ./test/generated/v2/services/DefaultsService.ts 1`]
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import CircuitBreaker from 'opossum';
+
 import type { ModelWithString } from '../models/ModelWithString';
-import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class DefaultsService {
+const circuitBreakerOptions = undefined;
 
+const callWithDefaultParametersCircuitBreaker = new CircuitBreaker((
+    parameterString: string = 'Hello World!',
+    parameterNumber: number = 123,
+    parameterBoolean: boolean = true,
+    parameterEnum: 'Success' | 'Warning' | 'Error' = 'Success',
+    parameterModel: ModelWithString = {
+        \\"prop\\": \\"Hello World!\\"
+    },
+) => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
+        query: {
+            'parameterString': parameterString,
+            'parameterNumber': parameterNumber,
+            'parameterBoolean': parameterBoolean,
+            'parameterEnum': parameterEnum,
+            'parameterModel': parameterModel,
+        },
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const callWithDefaultOptionalParametersCircuitBreaker = new CircuitBreaker((
+    parameterString: string = 'Hello World!',
+    parameterNumber: number = 123,
+    parameterBoolean: boolean = true,
+    parameterEnum: 'Success' | 'Warning' | 'Error' = 'Success',
+    parameterModel: ModelWithString = {
+        \\"prop\\": \\"Hello World!\\"
+    },
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
+        query: {
+            'parameterString': parameterString,
+            'parameterNumber': parameterNumber,
+            'parameterBoolean': parameterBoolean,
+            'parameterEnum': parameterEnum,
+            'parameterModel': parameterModel,
+        },
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const callToTestOrderOfParamsCircuitBreaker = new CircuitBreaker((
+    parameterStringWithNoDefault: string,
+    parameterOptionalStringWithDefault: string = 'Hello World!',
+    parameterOptionalStringWithEmptyDefault: string = '',
+    parameterOptionalStringWithNoDefault?: string,
+    parameterStringWithDefault: string = 'Hello World!',
+    parameterStringWithEmptyDefault: string = '',
+    parameterStringNullableWithNoDefault?: string | null,
+    parameterStringNullableWithDefault: string | null = null,
+) => {
+    return __request({
+        method: 'PUT',
+        path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
+        query: {
+            'parameterOptionalStringWithDefault': parameterOptionalStringWithDefault,
+            'parameterOptionalStringWithEmptyDefault': parameterOptionalStringWithEmptyDefault,
+            'parameterOptionalStringWithNoDefault': parameterOptionalStringWithNoDefault,
+            'parameterStringWithDefault': parameterStringWithDefault,
+            'parameterStringWithEmptyDefault': parameterStringWithEmptyDefault,
+            'parameterStringWithNoDefault': parameterStringWithNoDefault,
+            'parameterStringNullableWithNoDefault': parameterStringNullableWithNoDefault,
+            'parameterStringNullableWithDefault': parameterStringNullableWithDefault,
+        },
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class DefaultsService {
     /**
      * @param parameterString This is a simple string with default value
      * @param parameterNumber This is a simple number with default value
@@ -2122,18 +2233,14 @@ export class DefaultsService {
         parameterModel: ModelWithString = {
             \\"prop\\": \\"Hello World!\\"
         },
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
-            query: {
-                'parameterString': parameterString,
-                'parameterNumber': parameterNumber,
-                'parameterBoolean': parameterBoolean,
-                'parameterEnum': parameterEnum,
-                'parameterModel': parameterModel,
-            },
-        });
+    ): Promise<void> {
+        return callWithDefaultParametersCircuitBreaker.fire(
+            parameterString,
+            parameterNumber,
+            parameterBoolean,
+            parameterEnum,
+            parameterModel,
+        );
     }
 
     /**
@@ -2152,18 +2259,14 @@ export class DefaultsService {
         parameterModel: ModelWithString = {
             \\"prop\\": \\"Hello World!\\"
         },
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
-            query: {
-                'parameterString': parameterString,
-                'parameterNumber': parameterNumber,
-                'parameterBoolean': parameterBoolean,
-                'parameterEnum': parameterEnum,
-                'parameterModel': parameterModel,
-            },
-        });
+    ): Promise<void> {
+        return callWithDefaultOptionalParametersCircuitBreaker.fire(
+            parameterString,
+            parameterNumber,
+            parameterBoolean,
+            parameterEnum,
+            parameterModel,
+        );
     }
 
     /**
@@ -2186,21 +2289,17 @@ export class DefaultsService {
         parameterStringWithEmptyDefault: string = '',
         parameterStringNullableWithNoDefault?: string | null,
         parameterStringNullableWithDefault: string | null = null,
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'PUT',
-            path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
-            query: {
-                'parameterOptionalStringWithDefault': parameterOptionalStringWithDefault,
-                'parameterOptionalStringWithEmptyDefault': parameterOptionalStringWithEmptyDefault,
-                'parameterOptionalStringWithNoDefault': parameterOptionalStringWithNoDefault,
-                'parameterStringWithDefault': parameterStringWithDefault,
-                'parameterStringWithEmptyDefault': parameterStringWithEmptyDefault,
-                'parameterStringWithNoDefault': parameterStringWithNoDefault,
-                'parameterStringNullableWithNoDefault': parameterStringNullableWithNoDefault,
-                'parameterStringNullableWithDefault': parameterStringNullableWithDefault,
-            },
-        });
+    ): Promise<void> {
+        return callToTestOrderOfParamsCircuitBreaker.fire(
+            parameterStringWithNoDefault,
+            parameterOptionalStringWithDefault,
+            parameterOptionalStringWithEmptyDefault,
+            parameterOptionalStringWithNoDefault,
+            parameterStringWithDefault,
+            parameterStringWithEmptyDefault,
+            parameterStringNullableWithNoDefault,
+            parameterStringNullableWithDefault,
+        );
     }
 
 }"
@@ -2210,50 +2309,69 @@ exports[`v2 should generate: ./test/generated/v2/services/DuplicateService.ts 1`
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+const circuitBreakerOptions = undefined;
+
+const duplicateNameCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const duplicateName1CircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const duplicateName2CircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'PUT',
+        path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const duplicateName3CircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'DELETE',
+        path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
 export class DuplicateService {
-
     /**
      * @throws ApiError
      */
-    public static duplicateName(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
-        });
+    public static duplicateName(): Promise<void> {
+        return duplicateNameCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static duplicateName1(): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
-        });
+    public static duplicateName1(): Promise<void> {
+        return duplicateName1CircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static duplicateName2(): CancelablePromise<void> {
-        return __request({
-            method: 'PUT',
-            path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
-        });
+    public static duplicateName2(): Promise<void> {
+        return duplicateName2CircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static duplicateName3(): CancelablePromise<void> {
-        return __request({
-            method: 'DELETE',
-            path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
-        });
+    public static duplicateName3(): Promise<void> {
+        return duplicateName3CircuitBreaker.fire();
     }
 
 }"
@@ -2263,12 +2381,33 @@ exports[`v2 should generate: ./test/generated/v2/services/ErrorService.ts 1`] = 
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class ErrorService {
+const circuitBreakerOptions = undefined;
 
+const testErrorCodeCircuitBreaker = new CircuitBreaker((
+    status: string,
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/error\`,
+        query: {
+            'status': status,
+        },
+        errors: {
+            500: \`Custom message: Internal Server Error\`,
+            501: \`Custom message: Not Implemented\`,
+            502: \`Custom message: Bad Gateway\`,
+            503: \`Custom message: Service Unavailable\`,
+        },
+    }) as Promise<any>;
+}, circuitBreakerOptions);
+
+
+export class ErrorService {
     /**
      * @param status Status code to return
      * @returns any Custom message: Successful response
@@ -2276,20 +2415,10 @@ export class ErrorService {
      */
     public static testErrorCode(
         status: string,
-    ): CancelablePromise<any> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/error\`,
-            query: {
-                'status': status,
-            },
-            errors: {
-                500: \`Custom message: Internal Server Error\`,
-                501: \`Custom message: Not Implemented\`,
-                502: \`Custom message: Bad Gateway\`,
-                503: \`Custom message: Service Unavailable\`,
-            },
-        });
+    ): Promise<any> {
+        return testErrorCodeCircuitBreaker.fire(
+            status,
+        );
     }
 
 }"
@@ -2299,26 +2428,33 @@ exports[`v2 should generate: ./test/generated/v2/services/HeaderService.ts 1`] =
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class HeaderService {
+const circuitBreakerOptions = undefined;
 
+const callWithResultFromHeaderCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/header\`,
+        responseHeader: 'operation-location',
+        errors: {
+            400: \`400 server error\`,
+            500: \`500 server error\`,
+        },
+    }) as Promise<string>;
+}, circuitBreakerOptions);
+
+
+export class HeaderService {
     /**
      * @returns string Successful response
      * @throws ApiError
      */
-    public static callWithResultFromHeader(): CancelablePromise<string> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/header\`,
-            responseHeader: 'operation-location',
-            errors: {
-                400: \`400 server error\`,
-                500: \`500 server error\`,
-            },
-        });
+    public static callWithResultFromHeader(): Promise<string> {
+        return callWithResultFromHeaderCircuitBreaker.fire();
     }
 
 }"
@@ -2328,32 +2464,43 @@ exports[`v2 should generate: ./test/generated/v2/services/MultipleTags1Service.t
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class MultipleTags1Service {
+const circuitBreakerOptions = undefined;
 
+const dummyACircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const dummyBCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class MultipleTags1Service {
     /**
      * @returns void
      * @throws ApiError
      */
-    public static dummyA(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
-        });
+    public static dummyA(): Promise<void> {
+        return dummyACircuitBreaker.fire();
     }
 
     /**
      * @returns void
      * @throws ApiError
      */
-    public static dummyB(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
-        });
+    public static dummyB(): Promise<void> {
+        return dummyBCircuitBreaker.fire();
     }
 
 }"
@@ -2363,32 +2510,43 @@ exports[`v2 should generate: ./test/generated/v2/services/MultipleTags2Service.t
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class MultipleTags2Service {
+const circuitBreakerOptions = undefined;
 
+const dummyACircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const dummyBCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class MultipleTags2Service {
     /**
      * @returns void
      * @throws ApiError
      */
-    public static dummyA(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
-        });
+    public static dummyA(): Promise<void> {
+        return dummyACircuitBreaker.fire();
     }
 
     /**
      * @returns void
      * @throws ApiError
      */
-    public static dummyB(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
-        });
+    public static dummyB(): Promise<void> {
+        return dummyBCircuitBreaker.fire();
     }
 
 }"
@@ -2398,21 +2556,28 @@ exports[`v2 should generate: ./test/generated/v2/services/MultipleTags3Service.t
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class MultipleTags3Service {
+const circuitBreakerOptions = undefined;
 
+const dummyBCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class MultipleTags3Service {
     /**
      * @returns void
      * @throws ApiError
      */
-    public static dummyB(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
-        });
+    public static dummyB(): Promise<void> {
+        return dummyBCircuitBreaker.fire();
     }
 
 }"
@@ -2422,21 +2587,28 @@ exports[`v2 should generate: ./test/generated/v2/services/NoContentService.ts 1`
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class NoContentService {
+const circuitBreakerOptions = undefined;
 
+const callWithNoContentResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/no-content\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class NoContentService {
     /**
      * @returns void
      * @throws ApiError
      */
-    public static callWithNoContentResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/no-content\`,
-        });
+    public static callWithNoContentResponse(): Promise<void> {
+        return callWithNoContentResponseCircuitBreaker.fire();
     }
 
 }"
@@ -2446,12 +2618,65 @@ exports[`v2 should generate: ./test/generated/v2/services/ParametersService.ts 1
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class ParametersService {
+const circuitBreakerOptions = undefined;
 
+const callWithParametersCircuitBreaker = new CircuitBreaker((
+    parameterHeader: string,
+    parameterQuery: string,
+    parameterForm: string,
+    parameterBody: string,
+    parameterPath: string,
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath}\`,
+        headers: {
+            'parameterHeader': parameterHeader,
+        },
+        query: {
+            'parameterQuery': parameterQuery,
+        },
+        formData: {
+            'parameterForm': parameterForm,
+        },
+        body: parameterBody,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const callWithWeirdParameterNamesCircuitBreaker = new CircuitBreaker((
+    parameterHeader: string,
+    parameterQuery: string,
+    parameterForm: string,
+    parameterBody: string,
+    parameterPath1?: string,
+    parameterPath2?: string,
+    parameterPath3?: string,
+    _default?: string,
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath1}/\${parameterPath2}/\${parameterPath3}\`,
+        headers: {
+            'parameter.header': parameterHeader,
+        },
+        query: {
+            'default': _default,
+            'parameter-query': parameterQuery,
+        },
+        formData: {
+            'parameter_form': parameterForm,
+        },
+        body: parameterBody,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class ParametersService {
     /**
      * @param parameterHeader This is the parameter that goes into the header
      * @param parameterQuery This is the parameter that goes into the query params
@@ -2466,21 +2691,14 @@ export class ParametersService {
         parameterForm: string,
         parameterBody: string,
         parameterPath: string,
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath}\`,
-            headers: {
-                'parameterHeader': parameterHeader,
-            },
-            query: {
-                'parameterQuery': parameterQuery,
-            },
-            formData: {
-                'parameterForm': parameterForm,
-            },
-            body: parameterBody,
-        });
+    ): Promise<void> {
+        return callWithParametersCircuitBreaker.fire(
+            parameterHeader,
+            parameterQuery,
+            parameterForm,
+            parameterBody,
+            parameterPath,
+        );
     }
 
     /**
@@ -2503,22 +2721,17 @@ export class ParametersService {
         parameterPath2?: string,
         parameterPath3?: string,
         _default?: string,
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath1}/\${parameterPath2}/\${parameterPath3}\`,
-            headers: {
-                'parameter.header': parameterHeader,
-            },
-            query: {
-                'default': _default,
-                'parameter-query': parameterQuery,
-            },
-            formData: {
-                'parameter_form': parameterForm,
-            },
-            body: parameterBody,
-        });
+    ): Promise<void> {
+        return callWithWeirdParameterNamesCircuitBreaker.fire(
+            parameterHeader,
+            parameterQuery,
+            parameterForm,
+            parameterBody,
+            parameterPath1,
+            parameterPath2,
+            parameterPath3,
+            _default,
+        );
     }
 
 }"
@@ -2528,40 +2741,67 @@ exports[`v2 should generate: ./test/generated/v2/services/ResponseService.ts 1`]
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import CircuitBreaker from 'opossum';
+
 import type { ModelThatExtends } from '../models/ModelThatExtends';
 import type { ModelThatExtendsExtends } from '../models/ModelThatExtendsExtends';
 import type { ModelWithString } from '../models/ModelWithString';
-import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class ResponseService {
+const circuitBreakerOptions = undefined;
 
+const callWithResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/response\`,
+    }) as Promise<ModelWithString>;
+}, circuitBreakerOptions);
+
+const callWithDuplicateResponsesCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/response\`,
+        errors: {
+            500: \`Message for 500 error\`,
+            501: \`Message for 501 error\`,
+            502: \`Message for 502 error\`,
+        },
+    }) as Promise<ModelWithString>;
+}, circuitBreakerOptions);
+
+const callWithResponsesCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'PUT',
+        path: \`/api/v\${OpenAPI.VERSION}/response\`,
+        errors: {
+            500: \`Message for 500 error\`,
+            501: \`Message for 501 error\`,
+            502: \`Message for 502 error\`,
+        },
+    }) as Promise<{
+        readonly '@namespace.string'?: string;
+        readonly '@namespace.integer'?: number;
+        readonly value?: Array<ModelWithString>;
+    } | ModelWithString | ModelThatExtends | ModelThatExtendsExtends>;
+}, circuitBreakerOptions);
+
+
+export class ResponseService {
     /**
      * @returns ModelWithString Message for default response
      * @throws ApiError
      */
-    public static callWithResponse(): CancelablePromise<ModelWithString> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/response\`,
-        });
+    public static callWithResponse(): Promise<ModelWithString> {
+        return callWithResponseCircuitBreaker.fire();
     }
 
     /**
      * @returns ModelWithString Message for default response
      * @throws ApiError
      */
-    public static callWithDuplicateResponses(): CancelablePromise<ModelWithString> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/response\`,
-            errors: {
-                500: \`Message for 500 error\`,
-                501: \`Message for 501 error\`,
-                502: \`Message for 502 error\`,
-            },
-        });
+    public static callWithDuplicateResponses(): Promise<ModelWithString> {
+        return callWithDuplicateResponsesCircuitBreaker.fire();
     }
 
     /**
@@ -2571,20 +2811,12 @@ export class ResponseService {
      * @returns ModelThatExtendsExtends Message for 202 response
      * @throws ApiError
      */
-    public static callWithResponses(): CancelablePromise<{
+    public static callWithResponses(): Promise<{
         readonly '@namespace.string'?: string;
         readonly '@namespace.integer'?: number;
         readonly value?: Array<ModelWithString>;
     } | ModelWithString | ModelThatExtends | ModelThatExtendsExtends> {
-        return __request({
-            method: 'PUT',
-            path: \`/api/v\${OpenAPI.VERSION}/response\`,
-            errors: {
-                500: \`Message for 500 error\`,
-                501: \`Message for 501 error\`,
-                502: \`Message for 502 error\`,
-            },
-        });
+        return callWithResponsesCircuitBreaker.fire();
     }
 
 }"
@@ -2594,80 +2826,111 @@ exports[`v2 should generate: ./test/generated/v2/services/SimpleService.ts 1`] =
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+const circuitBreakerOptions = undefined;
+
+const getCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const putCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'PUT',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const postCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const deleteCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'DELETE',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const optionsCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'OPTIONS',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const headCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'HEAD',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const patchCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'PATCH',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
 export class SimpleService {
-
     /**
      * @throws ApiError
      */
-    public static getCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static getCallWithoutParametersAndResponse(): Promise<void> {
+        return getCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static putCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'PUT',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static putCallWithoutParametersAndResponse(): Promise<void> {
+        return putCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static postCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static postCallWithoutParametersAndResponse(): Promise<void> {
+        return postCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static deleteCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'DELETE',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static deleteCallWithoutParametersAndResponse(): Promise<void> {
+        return deleteCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static optionsCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'OPTIONS',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static optionsCallWithoutParametersAndResponse(): Promise<void> {
+        return optionsCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static headCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'HEAD',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static headCallWithoutParametersAndResponse(): Promise<void> {
+        return headCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static patchCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'PATCH',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static patchCallWithoutParametersAndResponse(): Promise<void> {
+        return patchCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
 }"
@@ -2677,12 +2940,40 @@ exports[`v2 should generate: ./test/generated/v2/services/TypesService.ts 1`] = 
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class TypesService {
+const circuitBreakerOptions = undefined;
 
+const typesCircuitBreaker = new CircuitBreaker((
+    parameterArray: Array<string>,
+    parameterDictionary: Record<string, string>,
+    parameterEnum: 'Success' | 'Warning' | 'Error',
+    parameterNumber: number = 123,
+    parameterString: string = 'default',
+    parameterBoolean: boolean = true,
+    parameterObject: any = null,
+    id?: number,
+) => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/types\`,
+        query: {
+            'parameterNumber': parameterNumber,
+            'parameterString': parameterString,
+            'parameterBoolean': parameterBoolean,
+            'parameterObject': parameterObject,
+            'parameterArray': parameterArray,
+            'parameterDictionary': parameterDictionary,
+            'parameterEnum': parameterEnum,
+        },
+    }) as Promise<number | string | boolean | any>;
+}, circuitBreakerOptions);
+
+
+export class TypesService {
     /**
      * @param parameterArray This is an array parameter
      * @param parameterDictionary This is a dictionary parameter
@@ -2707,20 +2998,17 @@ export class TypesService {
         parameterBoolean: boolean = true,
         parameterObject: any = null,
         id?: number,
-    ): CancelablePromise<number | string | boolean | any> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/types\`,
-            query: {
-                'parameterNumber': parameterNumber,
-                'parameterString': parameterString,
-                'parameterBoolean': parameterBoolean,
-                'parameterObject': parameterObject,
-                'parameterArray': parameterArray,
-                'parameterDictionary': parameterDictionary,
-                'parameterEnum': parameterEnum,
-            },
-        });
+    ): Promise<number | string | boolean | any> {
+        return typesCircuitBreaker.fire(
+            parameterArray,
+            parameterDictionary,
+            parameterEnum,
+            parameterNumber,
+            parameterString,
+            parameterBoolean,
+            parameterObject,
+            id,
+        );
     }
 
 }"
@@ -5317,12 +5605,35 @@ exports[`v3 should generate: ./test/generated/v3/services/CollectionFormatServic
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class CollectionFormatService {
+const circuitBreakerOptions = undefined;
 
+const collectionFormatCircuitBreaker = new CircuitBreaker((
+    parameterArrayCsv: Array<string> | null,
+    parameterArraySsv: Array<string> | null,
+    parameterArrayTsv: Array<string> | null,
+    parameterArrayPipes: Array<string> | null,
+    parameterArrayMulti: Array<string> | null,
+) => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/collectionFormat\`,
+        query: {
+            'parameterArrayCSV': parameterArrayCsv,
+            'parameterArraySSV': parameterArraySsv,
+            'parameterArrayTSV': parameterArrayTsv,
+            'parameterArrayPipes': parameterArrayPipes,
+            'parameterArrayMulti': parameterArrayMulti,
+        },
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class CollectionFormatService {
     /**
      * @param parameterArrayCsv This is an array parameter that is send as csv format (comma-separated values)
      * @param parameterArraySsv This is an array parameter that is send as ssv format (space-separated values)
@@ -5337,18 +5648,14 @@ export class CollectionFormatService {
         parameterArrayTsv: Array<string> | null,
         parameterArrayPipes: Array<string> | null,
         parameterArrayMulti: Array<string> | null,
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/collectionFormat\`,
-            query: {
-                'parameterArrayCSV': parameterArrayCsv,
-                'parameterArraySSV': parameterArraySsv,
-                'parameterArrayTSV': parameterArrayTsv,
-                'parameterArrayPipes': parameterArrayPipes,
-                'parameterArrayMulti': parameterArrayMulti,
-            },
-        });
+    ): Promise<void> {
+        return collectionFormatCircuitBreaker.fire(
+            parameterArrayCsv,
+            parameterArraySsv,
+            parameterArrayTsv,
+            parameterArrayPipes,
+            parameterArrayMulti,
+        );
     }
 
 }"
@@ -5358,16 +5665,67 @@ exports[`v3 should generate: ./test/generated/v3/services/ComplexService.ts 1`] 
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import CircuitBreaker from 'opossum';
+
 import type { ModelWithArray } from '../models/ModelWithArray';
 import type { ModelWithDictionary } from '../models/ModelWithDictionary';
 import type { ModelWithEnum } from '../models/ModelWithEnum';
 import type { ModelWithString } from '../models/ModelWithString';
-import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class ComplexService {
+const circuitBreakerOptions = undefined;
 
+const complexTypesCircuitBreaker = new CircuitBreaker((
+    parameterObject: {
+        first?: {
+            second?: {
+                third?: string;
+            };
+        };
+    },
+    parameterReference: ModelWithString,
+) => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/complex\`,
+        query: {
+            'parameterObject': parameterObject,
+            'parameterReference': parameterReference,
+        },
+        errors: {
+            400: \`400 server error\`,
+            500: \`500 server error\`,
+        },
+    }) as Promise<Array<ModelWithString>>;
+}, circuitBreakerOptions);
+
+const complexParamsCircuitBreaker = new CircuitBreaker((
+    id: number,
+    requestBody?: {
+        readonly key: string | null;
+        name: string | null;
+        enabled?: boolean;
+        readonly type: 'Monkey' | 'Horse' | 'Bird';
+        listOfModels?: Array<ModelWithString> | null;
+        listOfStrings?: Array<string> | null;
+        parameters: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
+        readonly user?: {
+            readonly id?: number;
+            readonly name?: string | null;
+        };
+    },
+) => {
+    return __request({
+        method: 'PUT',
+        path: \`/api/v\${OpenAPI.VERSION}/complex/\${id}\`,
+        body: requestBody,
+        mediaType: 'application/json-patch+json',
+    }) as Promise<ModelWithString>;
+}, circuitBreakerOptions);
+
+
+export class ComplexService {
     /**
      * @param parameterObject Parameter containing object
      * @param parameterReference Parameter containing reference
@@ -5383,19 +5741,11 @@ export class ComplexService {
             };
         },
         parameterReference: ModelWithString,
-    ): CancelablePromise<Array<ModelWithString>> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/complex\`,
-            query: {
-                'parameterObject': parameterObject,
-                'parameterReference': parameterReference,
-            },
-            errors: {
-                400: \`400 server error\`,
-                500: \`500 server error\`,
-            },
-        });
+    ): Promise<Array<ModelWithString>> {
+        return complexTypesCircuitBreaker.fire(
+            parameterObject,
+            parameterReference,
+        );
     }
 
     /**
@@ -5419,13 +5769,11 @@ export class ComplexService {
                 readonly name?: string | null;
             };
         },
-    ): CancelablePromise<ModelWithString> {
-        return __request({
-            method: 'PUT',
-            path: \`/api/v\${OpenAPI.VERSION}/complex/\${id}\`,
-            body: requestBody,
-            mediaType: 'application/json-patch+json',
-        });
+    ): Promise<ModelWithString> {
+        return complexParamsCircuitBreaker.fire(
+            id,
+            requestBody,
+        );
     }
 
 }"
@@ -5435,13 +5783,86 @@ exports[`v3 should generate: ./test/generated/v3/services/DefaultsService.ts 1`]
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import CircuitBreaker from 'opossum';
+
 import type { ModelWithString } from '../models/ModelWithString';
-import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class DefaultsService {
+const circuitBreakerOptions = undefined;
 
+const callWithDefaultParametersCircuitBreaker = new CircuitBreaker((
+    parameterString: string | null = 'Hello World!',
+    parameterNumber: number | null = 123,
+    parameterBoolean: boolean | null = true,
+    parameterEnum: 'Success' | 'Warning' | 'Error' = 'Success',
+    parameterModel: ModelWithString | null = {
+        \\"prop\\": \\"Hello World!\\"
+    },
+) => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
+        query: {
+            'parameterString': parameterString,
+            'parameterNumber': parameterNumber,
+            'parameterBoolean': parameterBoolean,
+            'parameterEnum': parameterEnum,
+            'parameterModel': parameterModel,
+        },
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const callWithDefaultOptionalParametersCircuitBreaker = new CircuitBreaker((
+    parameterString: string = 'Hello World!',
+    parameterNumber: number = 123,
+    parameterBoolean: boolean = true,
+    parameterEnum: 'Success' | 'Warning' | 'Error' = 'Success',
+    parameterModel: ModelWithString = {
+        \\"prop\\": \\"Hello World!\\"
+    },
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
+        query: {
+            'parameterString': parameterString,
+            'parameterNumber': parameterNumber,
+            'parameterBoolean': parameterBoolean,
+            'parameterEnum': parameterEnum,
+            'parameterModel': parameterModel,
+        },
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const callToTestOrderOfParamsCircuitBreaker = new CircuitBreaker((
+    parameterStringWithNoDefault: string,
+    parameterOptionalStringWithDefault: string = 'Hello World!',
+    parameterOptionalStringWithEmptyDefault: string = '',
+    parameterOptionalStringWithNoDefault?: string,
+    parameterStringWithDefault: string = 'Hello World!',
+    parameterStringWithEmptyDefault: string = '',
+    parameterStringNullableWithNoDefault?: string | null,
+    parameterStringNullableWithDefault: string | null = null,
+) => {
+    return __request({
+        method: 'PUT',
+        path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
+        query: {
+            'parameterOptionalStringWithDefault': parameterOptionalStringWithDefault,
+            'parameterOptionalStringWithEmptyDefault': parameterOptionalStringWithEmptyDefault,
+            'parameterOptionalStringWithNoDefault': parameterOptionalStringWithNoDefault,
+            'parameterStringWithDefault': parameterStringWithDefault,
+            'parameterStringWithEmptyDefault': parameterStringWithEmptyDefault,
+            'parameterStringWithNoDefault': parameterStringWithNoDefault,
+            'parameterStringNullableWithNoDefault': parameterStringNullableWithNoDefault,
+            'parameterStringNullableWithDefault': parameterStringNullableWithDefault,
+        },
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class DefaultsService {
     /**
      * @param parameterString This is a simple string with default value
      * @param parameterNumber This is a simple number with default value
@@ -5458,18 +5879,14 @@ export class DefaultsService {
         parameterModel: ModelWithString | null = {
             \\"prop\\": \\"Hello World!\\"
         },
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
-            query: {
-                'parameterString': parameterString,
-                'parameterNumber': parameterNumber,
-                'parameterBoolean': parameterBoolean,
-                'parameterEnum': parameterEnum,
-                'parameterModel': parameterModel,
-            },
-        });
+    ): Promise<void> {
+        return callWithDefaultParametersCircuitBreaker.fire(
+            parameterString,
+            parameterNumber,
+            parameterBoolean,
+            parameterEnum,
+            parameterModel,
+        );
     }
 
     /**
@@ -5488,18 +5905,14 @@ export class DefaultsService {
         parameterModel: ModelWithString = {
             \\"prop\\": \\"Hello World!\\"
         },
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
-            query: {
-                'parameterString': parameterString,
-                'parameterNumber': parameterNumber,
-                'parameterBoolean': parameterBoolean,
-                'parameterEnum': parameterEnum,
-                'parameterModel': parameterModel,
-            },
-        });
+    ): Promise<void> {
+        return callWithDefaultOptionalParametersCircuitBreaker.fire(
+            parameterString,
+            parameterNumber,
+            parameterBoolean,
+            parameterEnum,
+            parameterModel,
+        );
     }
 
     /**
@@ -5522,21 +5935,17 @@ export class DefaultsService {
         parameterStringWithEmptyDefault: string = '',
         parameterStringNullableWithNoDefault?: string | null,
         parameterStringNullableWithDefault: string | null = null,
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'PUT',
-            path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
-            query: {
-                'parameterOptionalStringWithDefault': parameterOptionalStringWithDefault,
-                'parameterOptionalStringWithEmptyDefault': parameterOptionalStringWithEmptyDefault,
-                'parameterOptionalStringWithNoDefault': parameterOptionalStringWithNoDefault,
-                'parameterStringWithDefault': parameterStringWithDefault,
-                'parameterStringWithEmptyDefault': parameterStringWithEmptyDefault,
-                'parameterStringWithNoDefault': parameterStringWithNoDefault,
-                'parameterStringNullableWithNoDefault': parameterStringNullableWithNoDefault,
-                'parameterStringNullableWithDefault': parameterStringNullableWithDefault,
-            },
-        });
+    ): Promise<void> {
+        return callToTestOrderOfParamsCircuitBreaker.fire(
+            parameterStringWithNoDefault,
+            parameterOptionalStringWithDefault,
+            parameterOptionalStringWithEmptyDefault,
+            parameterOptionalStringWithNoDefault,
+            parameterStringWithDefault,
+            parameterStringWithEmptyDefault,
+            parameterStringNullableWithNoDefault,
+            parameterStringNullableWithDefault,
+        );
     }
 
 }"
@@ -5546,50 +5955,69 @@ exports[`v3 should generate: ./test/generated/v3/services/DuplicateService.ts 1`
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+const circuitBreakerOptions = undefined;
+
+const duplicateNameCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const duplicateName1CircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const duplicateName2CircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'PUT',
+        path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const duplicateName3CircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'DELETE',
+        path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
 export class DuplicateService {
-
     /**
      * @throws ApiError
      */
-    public static duplicateName(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
-        });
+    public static duplicateName(): Promise<void> {
+        return duplicateNameCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static duplicateName1(): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
-        });
+    public static duplicateName1(): Promise<void> {
+        return duplicateName1CircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static duplicateName2(): CancelablePromise<void> {
-        return __request({
-            method: 'PUT',
-            path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
-        });
+    public static duplicateName2(): Promise<void> {
+        return duplicateName2CircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static duplicateName3(): CancelablePromise<void> {
-        return __request({
-            method: 'DELETE',
-            path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
-        });
+    public static duplicateName3(): Promise<void> {
+        return duplicateName3CircuitBreaker.fire();
     }
 
 }"
@@ -5599,12 +6027,33 @@ exports[`v3 should generate: ./test/generated/v3/services/ErrorService.ts 1`] = 
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class ErrorService {
+const circuitBreakerOptions = undefined;
 
+const testErrorCodeCircuitBreaker = new CircuitBreaker((
+    status: number,
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/error\`,
+        query: {
+            'status': status,
+        },
+        errors: {
+            500: \`Custom message: Internal Server Error\`,
+            501: \`Custom message: Not Implemented\`,
+            502: \`Custom message: Bad Gateway\`,
+            503: \`Custom message: Service Unavailable\`,
+        },
+    }) as Promise<any>;
+}, circuitBreakerOptions);
+
+
+export class ErrorService {
     /**
      * @param status Status code to return
      * @returns any Custom message: Successful response
@@ -5612,20 +6061,10 @@ export class ErrorService {
      */
     public static testErrorCode(
         status: number,
-    ): CancelablePromise<any> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/error\`,
-            query: {
-                'status': status,
-            },
-            errors: {
-                500: \`Custom message: Internal Server Error\`,
-                501: \`Custom message: Not Implemented\`,
-                502: \`Custom message: Bad Gateway\`,
-                503: \`Custom message: Service Unavailable\`,
-            },
-        });
+    ): Promise<any> {
+        return testErrorCodeCircuitBreaker.fire(
+            status,
+        );
     }
 
 }"
@@ -5635,13 +6074,31 @@ exports[`v3 should generate: ./test/generated/v3/services/FormDataService.ts 1`]
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import CircuitBreaker from 'opossum';
+
 import type { ModelWithString } from '../models/ModelWithString';
-import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class FormDataService {
+const circuitBreakerOptions = undefined;
 
+const postFormDataCircuitBreaker = new CircuitBreaker((
+    parameter?: string,
+    formData?: ModelWithString,
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/formData/\`,
+        query: {
+            'parameter': parameter,
+        },
+        formData: formData,
+        mediaType: 'multipart/form-data',
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class FormDataService {
     /**
      * @param parameter This is a reusable parameter
      * @param formData A reusable request body
@@ -5650,16 +6107,11 @@ export class FormDataService {
     public static postFormData(
         parameter?: string,
         formData?: ModelWithString,
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/formData/\`,
-            query: {
-                'parameter': parameter,
-            },
-            formData: formData,
-            mediaType: 'multipart/form-data',
-        });
+    ): Promise<void> {
+        return postFormDataCircuitBreaker.fire(
+            parameter,
+            formData,
+        );
     }
 
 }"
@@ -5669,26 +6121,33 @@ exports[`v3 should generate: ./test/generated/v3/services/HeaderService.ts 1`] =
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class HeaderService {
+const circuitBreakerOptions = undefined;
 
+const callWithResultFromHeaderCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/header\`,
+        responseHeader: 'operation-location',
+        errors: {
+            400: \`400 server error\`,
+            500: \`500 server error\`,
+        },
+    }) as Promise<string>;
+}, circuitBreakerOptions);
+
+
+export class HeaderService {
     /**
      * @returns string Successful response
      * @throws ApiError
      */
-    public static callWithResultFromHeader(): CancelablePromise<string> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/header\`,
-            responseHeader: 'operation-location',
-            errors: {
-                400: \`400 server error\`,
-                500: \`500 server error\`,
-            },
-        });
+    public static callWithResultFromHeader(): Promise<string> {
+        return callWithResultFromHeaderCircuitBreaker.fire();
     }
 
 }"
@@ -5698,13 +6157,43 @@ exports[`v3 should generate: ./test/generated/v3/services/MultipartService.ts 1`
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import CircuitBreaker from 'opossum';
+
 import type { ModelWithString } from '../models/ModelWithString';
-import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class MultipartService {
+const circuitBreakerOptions = undefined;
 
+const multipartRequestCircuitBreaker = new CircuitBreaker((
+    formData?: {
+        content?: Blob;
+        data?: ModelWithString | null;
+    },
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/multipart\`,
+        formData: formData,
+        mediaType: 'multipart/form-data',
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const multipartResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/multipart\`,
+    }) as Promise<{
+        file?: Blob;
+        metadata?: {
+            foo?: string;
+            bar?: string;
+        };
+    }>;
+}, circuitBreakerOptions);
+
+
+export class MultipartService {
     /**
      * @param formData
      * @throws ApiError
@@ -5714,30 +6203,24 @@ export class MultipartService {
             content?: Blob;
             data?: ModelWithString | null;
         },
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/multipart\`,
-            formData: formData,
-            mediaType: 'multipart/form-data',
-        });
+    ): Promise<void> {
+        return multipartRequestCircuitBreaker.fire(
+            formData,
+        );
     }
 
     /**
      * @returns any OK
      * @throws ApiError
      */
-    public static multipartResponse(): CancelablePromise<{
+    public static multipartResponse(): Promise<{
         file?: Blob;
         metadata?: {
             foo?: string;
             bar?: string;
         };
     }> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/multipart\`,
-        });
+        return multipartResponseCircuitBreaker.fire();
     }
 
 }"
@@ -5747,32 +6230,43 @@ exports[`v3 should generate: ./test/generated/v3/services/MultipleTags1Service.t
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class MultipleTags1Service {
+const circuitBreakerOptions = undefined;
 
+const dummyACircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const dummyBCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class MultipleTags1Service {
     /**
      * @returns void
      * @throws ApiError
      */
-    public static dummyA(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
-        });
+    public static dummyA(): Promise<void> {
+        return dummyACircuitBreaker.fire();
     }
 
     /**
      * @returns void
      * @throws ApiError
      */
-    public static dummyB(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
-        });
+    public static dummyB(): Promise<void> {
+        return dummyBCircuitBreaker.fire();
     }
 
 }"
@@ -5782,32 +6276,43 @@ exports[`v3 should generate: ./test/generated/v3/services/MultipleTags2Service.t
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class MultipleTags2Service {
+const circuitBreakerOptions = undefined;
 
+const dummyACircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const dummyBCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class MultipleTags2Service {
     /**
      * @returns void
      * @throws ApiError
      */
-    public static dummyA(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
-        });
+    public static dummyA(): Promise<void> {
+        return dummyACircuitBreaker.fire();
     }
 
     /**
      * @returns void
      * @throws ApiError
      */
-    public static dummyB(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
-        });
+    public static dummyB(): Promise<void> {
+        return dummyBCircuitBreaker.fire();
     }
 
 }"
@@ -5817,21 +6322,28 @@ exports[`v3 should generate: ./test/generated/v3/services/MultipleTags3Service.t
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class MultipleTags3Service {
+const circuitBreakerOptions = undefined;
 
+const dummyBCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class MultipleTags3Service {
     /**
      * @returns void
      * @throws ApiError
      */
-    public static dummyB(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
-        });
+    public static dummyB(): Promise<void> {
+        return dummyBCircuitBreaker.fire();
     }
 
 }"
@@ -5841,21 +6353,28 @@ exports[`v3 should generate: ./test/generated/v3/services/NoContentService.ts 1`
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class NoContentService {
+const circuitBreakerOptions = undefined;
 
+const callWithNoContentResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/no-content\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class NoContentService {
     /**
      * @returns void
      * @throws ApiError
      */
-    public static callWithNoContentResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/no-content\`,
-        });
+    public static callWithNoContentResponse(): Promise<void> {
+        return callWithNoContentResponseCircuitBreaker.fire();
     }
 
 }"
@@ -5865,13 +6384,106 @@ exports[`v3 should generate: ./test/generated/v3/services/ParametersService.ts 1
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import CircuitBreaker from 'opossum';
+
 import type { ModelWithString } from '../models/ModelWithString';
-import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class ParametersService {
+const circuitBreakerOptions = undefined;
 
+const callWithParametersCircuitBreaker = new CircuitBreaker((
+    parameterHeader: string | null,
+    parameterQuery: string | null,
+    parameterForm: string | null,
+    parameterCookie: string | null,
+    parameterPath: string | null,
+    requestBody: ModelWithString | null,
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath}\`,
+        cookies: {
+            'parameterCookie': parameterCookie,
+        },
+        headers: {
+            'parameterHeader': parameterHeader,
+        },
+        query: {
+            'parameterQuery': parameterQuery,
+        },
+        formData: {
+            'parameterForm': parameterForm,
+        },
+        body: requestBody,
+        mediaType: 'application/json',
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const callWithWeirdParameterNamesCircuitBreaker = new CircuitBreaker((
+    parameterHeader: string | null,
+    parameterQuery: string | null,
+    parameterForm: string | null,
+    parameterCookie: string | null,
+    requestBody: ModelWithString | null,
+    parameterPath1?: string,
+    parameterPath2?: string,
+    parameterPath3?: string,
+    _default?: string,
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath1}/\${parameterPath2}/\${parameterPath3}\`,
+        cookies: {
+            'PARAMETER-COOKIE': parameterCookie,
+        },
+        headers: {
+            'parameter.header': parameterHeader,
+        },
+        query: {
+            'default': _default,
+            'parameter-query': parameterQuery,
+        },
+        formData: {
+            'parameter_form': parameterForm,
+        },
+        body: requestBody,
+        mediaType: 'application/json',
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const getCallWithOptionalParamCircuitBreaker = new CircuitBreaker((
+    requestBody: ModelWithString,
+    parameter?: string,
+) => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/parameters/\`,
+        query: {
+            'parameter': parameter,
+        },
+        body: requestBody,
+        mediaType: 'application/json',
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const postCallWithOptionalParamCircuitBreaker = new CircuitBreaker((
+    parameter: string,
+    requestBody?: ModelWithString,
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/parameters/\`,
+        query: {
+            'parameter': parameter,
+        },
+        body: requestBody,
+        mediaType: 'application/json',
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class ParametersService {
     /**
      * @param parameterHeader This is the parameter that goes into the header
      * @param parameterQuery This is the parameter that goes into the query params
@@ -5888,25 +6500,15 @@ export class ParametersService {
         parameterCookie: string | null,
         parameterPath: string | null,
         requestBody: ModelWithString | null,
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath}\`,
-            cookies: {
-                'parameterCookie': parameterCookie,
-            },
-            headers: {
-                'parameterHeader': parameterHeader,
-            },
-            query: {
-                'parameterQuery': parameterQuery,
-            },
-            formData: {
-                'parameterForm': parameterForm,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
+    ): Promise<void> {
+        return callWithParametersCircuitBreaker.fire(
+            parameterHeader,
+            parameterQuery,
+            parameterForm,
+            parameterCookie,
+            parameterPath,
+            requestBody,
+        );
     }
 
     /**
@@ -5931,26 +6533,18 @@ export class ParametersService {
         parameterPath2?: string,
         parameterPath3?: string,
         _default?: string,
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath1}/\${parameterPath2}/\${parameterPath3}\`,
-            cookies: {
-                'PARAMETER-COOKIE': parameterCookie,
-            },
-            headers: {
-                'parameter.header': parameterHeader,
-            },
-            query: {
-                'default': _default,
-                'parameter-query': parameterQuery,
-            },
-            formData: {
-                'parameter_form': parameterForm,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
+    ): Promise<void> {
+        return callWithWeirdParameterNamesCircuitBreaker.fire(
+            parameterHeader,
+            parameterQuery,
+            parameterForm,
+            parameterCookie,
+            requestBody,
+            parameterPath1,
+            parameterPath2,
+            parameterPath3,
+            _default,
+        );
     }
 
     /**
@@ -5961,16 +6555,11 @@ export class ParametersService {
     public static getCallWithOptionalParam(
         requestBody: ModelWithString,
         parameter?: string,
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/parameters/\`,
-            query: {
-                'parameter': parameter,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
+    ): Promise<void> {
+        return getCallWithOptionalParamCircuitBreaker.fire(
+            requestBody,
+            parameter,
+        );
     }
 
     /**
@@ -5981,16 +6570,11 @@ export class ParametersService {
     public static postCallWithOptionalParam(
         parameter: string,
         requestBody?: ModelWithString,
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/parameters/\`,
-            query: {
-                'parameter': parameter,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
+    ): Promise<void> {
+        return postCallWithOptionalParamCircuitBreaker.fire(
+            parameter,
+            requestBody,
+        );
     }
 
 }"
@@ -6000,13 +6584,31 @@ exports[`v3 should generate: ./test/generated/v3/services/RequestBodyService.ts 
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import CircuitBreaker from 'opossum';
+
 import type { ModelWithString } from '../models/ModelWithString';
-import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class RequestBodyService {
+const circuitBreakerOptions = undefined;
 
+const postRequestBodyCircuitBreaker = new CircuitBreaker((
+    parameter?: string,
+    requestBody?: ModelWithString,
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/requestBody/\`,
+        query: {
+            'parameter': parameter,
+        },
+        body: requestBody,
+        mediaType: 'application/json',
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
+export class RequestBodyService {
     /**
      * @param parameter This is a reusable parameter
      * @param requestBody A reusable request body
@@ -6015,16 +6617,11 @@ export class RequestBodyService {
     public static postRequestBody(
         parameter?: string,
         requestBody?: ModelWithString,
-    ): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/requestBody/\`,
-            query: {
-                'parameter': parameter,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
+    ): Promise<void> {
+        return postRequestBodyCircuitBreaker.fire(
+            parameter,
+            requestBody,
+        );
     }
 
 }"
@@ -6034,40 +6631,67 @@ exports[`v3 should generate: ./test/generated/v3/services/ResponseService.ts 1`]
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import CircuitBreaker from 'opossum';
+
 import type { ModelThatExtends } from '../models/ModelThatExtends';
 import type { ModelThatExtendsExtends } from '../models/ModelThatExtendsExtends';
 import type { ModelWithString } from '../models/ModelWithString';
-import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class ResponseService {
+const circuitBreakerOptions = undefined;
 
+const callWithResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/response\`,
+    }) as Promise<ModelWithString>;
+}, circuitBreakerOptions);
+
+const callWithDuplicateResponsesCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/response\`,
+        errors: {
+            500: \`Message for 500 error\`,
+            501: \`Message for 501 error\`,
+            502: \`Message for 502 error\`,
+        },
+    }) as Promise<ModelWithString>;
+}, circuitBreakerOptions);
+
+const callWithResponsesCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'PUT',
+        path: \`/api/v\${OpenAPI.VERSION}/response\`,
+        errors: {
+            500: \`Message for 500 error\`,
+            501: \`Message for 501 error\`,
+            502: \`Message for 502 error\`,
+        },
+    }) as Promise<{
+        readonly '@namespace.string'?: string;
+        readonly '@namespace.integer'?: number;
+        readonly value?: Array<ModelWithString>;
+    } | ModelWithString | ModelThatExtends | ModelThatExtendsExtends>;
+}, circuitBreakerOptions);
+
+
+export class ResponseService {
     /**
      * @returns ModelWithString
      * @throws ApiError
      */
-    public static callWithResponse(): CancelablePromise<ModelWithString> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/response\`,
-        });
+    public static callWithResponse(): Promise<ModelWithString> {
+        return callWithResponseCircuitBreaker.fire();
     }
 
     /**
      * @returns ModelWithString Message for default response
      * @throws ApiError
      */
-    public static callWithDuplicateResponses(): CancelablePromise<ModelWithString> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/response\`,
-            errors: {
-                500: \`Message for 500 error\`,
-                501: \`Message for 501 error\`,
-                502: \`Message for 502 error\`,
-            },
-        });
+    public static callWithDuplicateResponses(): Promise<ModelWithString> {
+        return callWithDuplicateResponsesCircuitBreaker.fire();
     }
 
     /**
@@ -6077,20 +6701,12 @@ export class ResponseService {
      * @returns ModelThatExtendsExtends Message for 202 response
      * @throws ApiError
      */
-    public static callWithResponses(): CancelablePromise<{
+    public static callWithResponses(): Promise<{
         readonly '@namespace.string'?: string;
         readonly '@namespace.integer'?: number;
         readonly value?: Array<ModelWithString>;
     } | ModelWithString | ModelThatExtends | ModelThatExtendsExtends> {
-        return __request({
-            method: 'PUT',
-            path: \`/api/v\${OpenAPI.VERSION}/response\`,
-            errors: {
-                500: \`Message for 500 error\`,
-                501: \`Message for 501 error\`,
-                502: \`Message for 502 error\`,
-            },
-        });
+        return callWithResponsesCircuitBreaker.fire();
     }
 
 }"
@@ -6100,80 +6716,111 @@ exports[`v3 should generate: ./test/generated/v3/services/SimpleService.ts 1`] =
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+const circuitBreakerOptions = undefined;
+
+const getCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const putCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'PUT',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const postCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const deleteCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'DELETE',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const optionsCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'OPTIONS',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const headCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'HEAD',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+const patchCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+    return __request({
+        method: 'PATCH',
+        path: \`/api/v\${OpenAPI.VERSION}/simple\`,
+    }) as Promise<void>;
+}, circuitBreakerOptions);
+
+
 export class SimpleService {
-
     /**
      * @throws ApiError
      */
-    public static getCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static getCallWithoutParametersAndResponse(): Promise<void> {
+        return getCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static putCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'PUT',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static putCallWithoutParametersAndResponse(): Promise<void> {
+        return putCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static postCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static postCallWithoutParametersAndResponse(): Promise<void> {
+        return postCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static deleteCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'DELETE',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static deleteCallWithoutParametersAndResponse(): Promise<void> {
+        return deleteCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static optionsCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'OPTIONS',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static optionsCallWithoutParametersAndResponse(): Promise<void> {
+        return optionsCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static headCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'HEAD',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static headCallWithoutParametersAndResponse(): Promise<void> {
+        return headCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
     /**
      * @throws ApiError
      */
-    public static patchCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return __request({
-            method: 'PATCH',
-            path: \`/api/v\${OpenAPI.VERSION}/simple\`,
-        });
+    public static patchCallWithoutParametersAndResponse(): Promise<void> {
+        return patchCallWithoutParametersAndResponseCircuitBreaker.fire();
     }
 
 }"
@@ -6183,12 +6830,40 @@ exports[`v3 should generate: ./test/generated/v3/services/TypesService.ts 1`] = 
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class TypesService {
+const circuitBreakerOptions = undefined;
 
+const typesCircuitBreaker = new CircuitBreaker((
+    parameterArray: Array<string> | null,
+    parameterDictionary: any,
+    parameterEnum: 'Success' | 'Warning' | 'Error' | null,
+    parameterNumber: number = 123,
+    parameterString: string | null = 'default',
+    parameterBoolean: boolean | null = true,
+    parameterObject: any = null,
+    id?: number,
+) => {
+    return __request({
+        method: 'GET',
+        path: \`/api/v\${OpenAPI.VERSION}/types\`,
+        query: {
+            'parameterNumber': parameterNumber,
+            'parameterString': parameterString,
+            'parameterBoolean': parameterBoolean,
+            'parameterObject': parameterObject,
+            'parameterArray': parameterArray,
+            'parameterDictionary': parameterDictionary,
+            'parameterEnum': parameterEnum,
+        },
+    }) as Promise<number | string | boolean | any>;
+}, circuitBreakerOptions);
+
+
+export class TypesService {
     /**
      * @param parameterArray This is an array parameter
      * @param parameterDictionary This is a dictionary parameter
@@ -6213,20 +6888,17 @@ export class TypesService {
         parameterBoolean: boolean | null = true,
         parameterObject: any = null,
         id?: number,
-    ): CancelablePromise<number | string | boolean | any> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/types\`,
-            query: {
-                'parameterNumber': parameterNumber,
-                'parameterString': parameterString,
-                'parameterBoolean': parameterBoolean,
-                'parameterObject': parameterObject,
-                'parameterArray': parameterArray,
-                'parameterDictionary': parameterDictionary,
-                'parameterEnum': parameterEnum,
-            },
-        });
+    ): Promise<number | string | boolean | any> {
+        return typesCircuitBreaker.fire(
+            parameterArray,
+            parameterDictionary,
+            parameterEnum,
+            parameterNumber,
+            parameterString,
+            parameterBoolean,
+            parameterObject,
+            id,
+        );
     }
 
 }"
@@ -6236,12 +6908,27 @@ exports[`v3 should generate: ./test/generated/v3/services/UploadService.ts 1`] =
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
+import CircuitBreaker from 'opossum';
+
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
-export class UploadService {
+const circuitBreakerOptions = undefined;
 
+const uploadFileCircuitBreaker = new CircuitBreaker((
+    file: Blob,
+) => {
+    return __request({
+        method: 'POST',
+        path: \`/api/v\${OpenAPI.VERSION}/upload\`,
+        formData: {
+            'file': file,
+        },
+    }) as Promise<boolean>;
+}, circuitBreakerOptions);
+
+
+export class UploadService {
     /**
      * @param file Supply a file reference for upload
      * @returns boolean
@@ -6249,14 +6936,10 @@ export class UploadService {
      */
     public static uploadFile(
         file: Blob,
-    ): CancelablePromise<boolean> {
-        return __request({
-            method: 'POST',
-            path: \`/api/v\${OpenAPI.VERSION}/upload\`,
-            formData: {
-                'file': file,
-            },
-        });
+    ): Promise<boolean> {
+        return uploadFileCircuitBreaker.fire(
+            file,
+        );
     }
 
 }"
