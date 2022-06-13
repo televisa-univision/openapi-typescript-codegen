@@ -37,9 +37,16 @@ const circuitBreakerOptions = {{#if circuitBreakerOptions}}{{circuitBreakerOptio
 
 {{#each operations}}
 const {{{name}}}CircuitBreaker = new CircuitBreaker(({{>parameters}}) => {
-    return __request({
+    return __request(OpenAPI, {
         method: '{{{method}}}',
-        path: `{{{path}}}`,
+        url: '{{{path}}}',
+		{{#if parametersPath}}
+		path: {
+			{{#each parametersPath}}
+			'{{{prop}}}': {{{name}}},
+			{{/each}}
+		},
+		{{/if}}
         {{#if parametersCookie}}
         cookies: {
             {{#each parametersCookie}}
@@ -94,33 +101,6 @@ const {{{name}}}CircuitBreaker = new CircuitBreaker(({{>parameters}}) => {
 
 {{/each}}
 
-export class {{{name}}}{{{@root.postfix}}} {
-    {{#each operations}}
-    /**
-    {{#if deprecated}}
-     * @deprecated
-    {{/if}}
-    {{#if summary}}
-     * {{{summary}}}
-    {{/if}}
-    {{#if description}}
-     * {{{description}}}
-    {{/if}}
-    {{#unless @root.useOptions}}
-    {{#if parameters}}
-    {{#each parameters}}
-     * @param {{{name}}} {{{description}}}
-    {{/each}}
-    {{/if}}
-    {{/unless}}
-    {{#each results}}
-     * @returns {{{type}}} {{{description}}}
-    {{/each}}
-     * @throws ApiError
-     */
-    public static {{{name}}}({{>parameters}}): Promise<{{>result}}> {
-        return {{{name}}}CircuitBreaker.fire({{>arguments}});
-    }
 {{#equals @root.httpClient 'angular'}}
 @Injectable()
 {{/equals}}
@@ -163,7 +143,7 @@ export class {{{name}}}{{{@root.postfix}}} {
 	public {{{name}}}({{>parameters}}): Observable<{{>result}}> {
 		return this.httpRequest.request({
 	{{else}}
-	public {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
+	public {{{name}}}({{>parameters}}): Promise<{{>result}}> {
 		return this.httpRequest.request({
 	{{/equals}}
 	{{else}}
@@ -171,7 +151,7 @@ export class {{{name}}}{{{@root.postfix}}} {
 	public {{{name}}}({{>parameters}}): Observable<{{>result}}> {
 		return __request(OpenAPI, this.http, {
 	{{else}}
-	public static {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
+	public static {{{name}}}({{>parameters}}): Promise<{{>result}}> {
 		return __request(OpenAPI, {
 	{{/equals}}
 	{{/if}}

@@ -1,14 +1,19 @@
-async function sendRequest(options: ApiRequestOptions, url: string, onCancel: OnCancel): Promise<Response<unknown>> {
+async function sendRequest(
+	config: OpenAPIConfig,
+	options: ApiRequestOptions,
+	url: string,
+	onCancel: OnCancel
+): Promise<Response<unknown>> {
     const gotOptions: OptionsOfUnknownResponseBody = {
         method: options.method,
-        headers: await getHeaders(options),
+        headers: await getHeaders(config, options),
         body: await getRequestBody(options),
         throwHttpErrors: false,
-        timeout: OpenAPI.GOT_TIMEOUT,
-        retry: OpenAPI.GOT_RETRY,
+        timeout: config.GOT_TIMEOUT,
+        retry: config.GOT_RETRY,
         agent: {
-            https: OpenAPI.HTTPS_AGENT,
-            http: OpenAPI.HTTP_AGENT,
+            https: config.HTTPS_AGENT,
+            http: config.HTTP_AGENT,
         },
     };
 

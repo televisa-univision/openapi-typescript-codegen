@@ -17,4 +17,6 @@ export const getHttpRequestName = (httpClient: HttpClient): string => {
         case HttpClient.ANGULAR:
             return 'AngularHttpRequest';
     }
+
+    return HttpClient.GOT;
 };

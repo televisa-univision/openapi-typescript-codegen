@@ -18,7 +18,7 @@ export interface Delays {
     request?: number;
 }
 
-type Config = {
+export type OpenAPIConfig = {
     BASE: string;
     VERSION: string;
     WITH_CREDENTIALS: boolean;
@@ -34,7 +34,7 @@ type Config = {
     HTTP_AGENT?: HttpAgent;
 }
 
-export const OpenAPI: Config = {
+export const OpenAPI: OpenAPIConfig = {
     BASE: '{{{server}}}',
     VERSION: '{{{version}}}',
     WITH_CREDENTIALS: false,
@@ -48,28 +48,4 @@ export const OpenAPI: Config = {
     GOT_RETRY: undefined,
     HTTPS_AGENT: undefined,
     HTTP_AGENT: undefined,
-};
-
-export type OpenAPIConfig = {
-	BASE: string;
-	VERSION: string;
-	WITH_CREDENTIALS: boolean;
-	CREDENTIALS: 'include' | 'omit' | 'same-origin';
-	TOKEN?: string | Resolver<string>;
-	USERNAME?: string | Resolver<string>;
-	PASSWORD?: string | Resolver<string>;
-	HEADERS?: Headers | Resolver<Headers>;
-	ENCODE_PATH?: (path: string) => string;
-};
-
-export const OpenAPI: OpenAPIConfig = {
-	BASE: '{{{server}}}',
-	VERSION: '{{{version}}}',
-	WITH_CREDENTIALS: false,
-	CREDENTIALS: 'include',
-	TOKEN: undefined,
-	USERNAME: undefined,
-	PASSWORD: undefined,
-	HEADERS: undefined,
-	ENCODE_PATH: undefined,
 };
