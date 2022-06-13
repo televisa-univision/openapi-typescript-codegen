@@ -4171,9 +4171,10 @@ onetime@^5.1.2:
   dependencies:
     mimic-fn "^2.1.0"
 
-"opossum@https://github.com/televisa-univision/opossum.git#6.3.0-custom-error-class":
+"opossum@https://github.com/televisa-univision/opossum.git#v6.3.0":
   version "6.3.0"
-  resolved "https://github.com/televisa-univision/opossum.git#1ed96e403a37f019cbe190daa85d9784ad873a22"
+  uid "6d71bad7db7791b2da5f0b4fe7d67ac70425b654"
+  resolved "https://github.com/televisa-univision/opossum.git#6d71bad7db7791b2da5f0b4fe7d67ac70425b654"
 
 optionator@^0.8.1:
   version "0.8.3"

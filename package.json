@@ -72,7 +72,7 @@
         "json-schema-ref-parser": "^9.0.7",
         "mkdirp": "^1.0.4",
         "node-fetch": "^2.6.5",
-        "opossum": "https://github.com/televisa-univision/opossum.git#6.3.0-custom-error-class",
+        "opossum": "https://github.com/televisa-univision/opossum.git#v6.3.0",
         "rimraf": "^3.0.2"
     },
     "devDependencies": {
