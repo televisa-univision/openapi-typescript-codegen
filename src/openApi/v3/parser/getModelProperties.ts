@@ -4,19 +4,18 @@ import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { escapeName } from './escapeName';
-import { getComment } from './getComment';
 import type { getModel } from './getModel';
 import { getType } from './getType';
 
 // Fix for circular dependency
 export type GetModelFn = typeof getModel;
 
-export function getModelProperties(
+export const getModelProperties = (
     openApi: OpenApi,
     definition: OpenApiSchema,
     getModel: GetModelFn,
     parent?: Model
-): Model[] {
+): Model[] => {
     const models: Model[] = [];
     const discriminator = findOneOfParentDiscriminator(openApi, parent);
     for (const propertyName in definition.properties) {
@@ -37,7 +36,8 @@ export function getModelProperties(
                 | 'properties'
             > = {
                 name: escapeName(propertyName),
-                description: getComment(property.description),
+                description: property.description || null,
+                deprecated: property.deprecated === true,
                 isDefinition: false,
                 isReadOnly: property.readOnly === true,
                 isRequired: propertyRequired,
@@ -105,4 +105,4 @@ export function getModelProperties(
     }
 
     return models;
-}
+};

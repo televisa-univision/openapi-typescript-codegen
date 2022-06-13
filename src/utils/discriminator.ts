@@ -4,35 +4,33 @@ import type { OpenApiDiscriminator } from '../openApi/v3/interfaces/OpenApiDiscr
 import { stripNamespace } from '../openApi/v3/parser/stripNamespace';
 import type { Dictionary } from './types';
 
-function inverseDictionary(map: Dictionary<string>): Dictionary<string> {
+const inverseDictionary = (map: Dictionary<string>): Dictionary<string> => {
     const m2: Dictionary<string> = {};
     for (const key in map) {
         m2[map[key]] = key;
     }
     return m2;
-}
+};
 
-export function findOneOfParentDiscriminator(openApi: OpenApi, parent?: Model): OpenApiDiscriminator | undefined {
-    if (openApi.components) {
+export const findOneOfParentDiscriminator = (openApi: OpenApi, parent?: Model): OpenApiDiscriminator | undefined => {
+    if (openApi.components && parent) {
         for (const definitionName in openApi.components.schemas) {
             if (openApi.components.schemas.hasOwnProperty(definitionName)) {
                 const schema = openApi.components.schemas[definitionName];
-                if (parent && schema.oneOf?.length && schema.discriminator) {
-                    const isPartOf =
-                        schema.oneOf
-                            .map(definition => definition.$ref && stripNamespace(definition.$ref) === parent.name)
-                            .filter(Boolean).length > 0;
-                    if (isPartOf) {
-                        return schema.discriminator;
-                    }
+                if (
+                    schema.discriminator &&
+                    schema.oneOf?.length &&
+                    schema.oneOf.some(definition => definition.$ref && stripNamespace(definition.$ref) == parent.name)
+                ) {
+                    return schema.discriminator;
                 }
             }
         }
     }
-    return;
-}
+    return undefined;
+};
 
-export function mapPropertyValue(discriminator: OpenApiDiscriminator, parent: Model): string {
+export const mapPropertyValue = (discriminator: OpenApiDiscriminator, parent: Model): string => {
     if (discriminator.mapping) {
         const mapping = inverseDictionary(discriminator.mapping);
         const key = Object.keys(mapping).find(item => stripNamespace(item) == parent.name);
@@ -41,4 +39,4 @@ export function mapPropertyValue(discriminator: OpenApiDiscriminator, parent: Mo
         }
     }
     return parent.name;
-}
+};

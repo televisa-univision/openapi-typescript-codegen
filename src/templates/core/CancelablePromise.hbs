@@ -2,21 +2,22 @@
 
 export class CancelError extends Error {
 
-    constructor(reason: string = 'Promise was canceled') {
-        super(reason);
-        this.name = 'CancelError';
-    }
+	constructor(message: string) {
+		super(message);
+		this.name = 'CancelError';
+	}
 
-    public get isCancelled(): boolean {
-        return true;
-    }
+	public get isCancelled(): boolean {
+		return true;
+	}
 }
 
 export interface OnCancel {
-    readonly isPending: boolean;
-    readonly isCancelled: boolean;
+	readonly isResolved: boolean;
+	readonly isRejected: boolean;
+	readonly isCancelled: boolean;
 
-    (cancelHandler: () => void): void;
+	(cancelHandler: () => void): void;
 }
 
 export class CancelablePromise<T> implements Promise<T> {
