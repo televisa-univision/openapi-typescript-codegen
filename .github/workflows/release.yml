@@ -1,0 +1,35 @@
+name: 'Release'
+on:
+  workflow_run:
+    workflows: ["Build and Test"]
+    branches:
+      - main
+    types:
+      - completed
+env:
+  dependency_cache_prefix: v1-dependencies-
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: >
+      ${{ github.event_name == 'push' &&
+      github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+
+      - name: Install Packages
+        run: yarn install --frozen-lockfile
+        shell: bash
+
+      - name: Build
+        run: yarn build
+
+      - name: Release
+        env:
+          NPM_TOKEN: ${{ secrets.NPMJS_TOKEN }}
+          GH_TOKEN: ${{ secrets.PRIVATE_REPO_GITHUB_TOKEN }}
+        run: |
+          yarn semantic-release

@@ -79,7 +79,7 @@ export interface OnCancel {
 }
 
 export class CancelablePromise<T> implements Promise<T> {
-    readonly [Symbol.toStringTag]: string;
+    readonly [Symbol.toStringTag]!: string;
 
     #isPending: boolean;
     #isCancelled: boolean;
@@ -2020,9 +2020,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"CollectionFormatCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const collectionFormatCircuitBreaker = new CircuitBreaker((
+const collectionFormatCircuitBreaker = new CustomCircuitBreaker((
     parameterArrayCsv: Array<string>,
     parameterArraySsv: Array<string>,
     parameterArrayTsv: Array<string>,
@@ -2081,9 +2097,25 @@ import type { ModelWithString } from '../models/ModelWithString';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"ComplexCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const complexTypesCircuitBreaker = new CircuitBreaker((
+const complexTypesCircuitBreaker = new CustomCircuitBreaker((
     parameterObject: {
         first?: {
             second?: {
@@ -2144,9 +2176,25 @@ import type { ModelWithString } from '../models/ModelWithString';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"DefaultsCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const callWithDefaultParametersCircuitBreaker = new CircuitBreaker((
+const callWithDefaultParametersCircuitBreaker = new CustomCircuitBreaker((
     parameterString: string = 'Hello World!',
     parameterNumber: number = 123,
     parameterBoolean: boolean = true,
@@ -2168,7 +2216,7 @@ const callWithDefaultParametersCircuitBreaker = new CircuitBreaker((
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const callWithDefaultOptionalParametersCircuitBreaker = new CircuitBreaker((
+const callWithDefaultOptionalParametersCircuitBreaker = new CustomCircuitBreaker((
     parameterString: string = 'Hello World!',
     parameterNumber: number = 123,
     parameterBoolean: boolean = true,
@@ -2190,7 +2238,7 @@ const callWithDefaultOptionalParametersCircuitBreaker = new CircuitBreaker((
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const callToTestOrderOfParamsCircuitBreaker = new CircuitBreaker((
+const callToTestOrderOfParamsCircuitBreaker = new CustomCircuitBreaker((
     parameterStringWithNoDefault: string,
     parameterOptionalStringWithDefault: string = 'Hello World!',
     parameterOptionalStringWithEmptyDefault: string = '',
@@ -2315,30 +2363,46 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"DuplicateCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const duplicateNameCircuitBreaker = new CircuitBreaker(() => {
+const duplicateNameCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const duplicateName1CircuitBreaker = new CircuitBreaker(() => {
+const duplicateName1CircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'POST',
         path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const duplicateName2CircuitBreaker = new CircuitBreaker(() => {
+const duplicateName2CircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'PUT',
         path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const duplicateName3CircuitBreaker = new CircuitBreaker(() => {
+const duplicateName3CircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'DELETE',
         path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
@@ -2387,9 +2451,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"ErrorCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const testErrorCodeCircuitBreaker = new CircuitBreaker((
+const testErrorCodeCircuitBreaker = new CustomCircuitBreaker((
     status: string,
 ) => {
     return __request({
@@ -2434,9 +2514,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"HeaderCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const callWithResultFromHeaderCircuitBreaker = new CircuitBreaker(() => {
+const callWithResultFromHeaderCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'POST',
         path: \`/api/v\${OpenAPI.VERSION}/header\`,
@@ -2470,16 +2566,32 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"MultipleTags1CircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const dummyACircuitBreaker = new CircuitBreaker(() => {
+const dummyACircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const dummyBCircuitBreaker = new CircuitBreaker(() => {
+const dummyBCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
@@ -2516,16 +2628,32 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"MultipleTags2CircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const dummyACircuitBreaker = new CircuitBreaker(() => {
+const dummyACircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const dummyBCircuitBreaker = new CircuitBreaker(() => {
+const dummyBCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
@@ -2562,9 +2690,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"MultipleTags3CircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const dummyBCircuitBreaker = new CircuitBreaker(() => {
+const dummyBCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
@@ -2593,9 +2737,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"NoContentCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const callWithNoContentResponseCircuitBreaker = new CircuitBreaker(() => {
+const callWithNoContentResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/no-content\`,
@@ -2624,9 +2784,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"ParametersCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const callWithParametersCircuitBreaker = new CircuitBreaker((
+const callWithParametersCircuitBreaker = new CustomCircuitBreaker((
     parameterHeader: string,
     parameterQuery: string,
     parameterForm: string,
@@ -2649,7 +2825,7 @@ const callWithParametersCircuitBreaker = new CircuitBreaker((
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const callWithWeirdParameterNamesCircuitBreaker = new CircuitBreaker((
+const callWithWeirdParameterNamesCircuitBreaker = new CustomCircuitBreaker((
     parameterHeader: string,
     parameterQuery: string,
     parameterForm: string,
@@ -2750,16 +2926,32 @@ import type { ModelWithString } from '../models/ModelWithString';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"ResponseCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const callWithResponseCircuitBreaker = new CircuitBreaker(() => {
+const callWithResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/response\`,
     }) as Promise<ModelWithString>;
 }, circuitBreakerOptions);
 
-const callWithDuplicateResponsesCircuitBreaker = new CircuitBreaker(() => {
+const callWithDuplicateResponsesCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'POST',
         path: \`/api/v\${OpenAPI.VERSION}/response\`,
@@ -2771,7 +2963,7 @@ const callWithDuplicateResponsesCircuitBreaker = new CircuitBreaker(() => {
     }) as Promise<ModelWithString>;
 }, circuitBreakerOptions);
 
-const callWithResponsesCircuitBreaker = new CircuitBreaker(() => {
+const callWithResponsesCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'PUT',
         path: \`/api/v\${OpenAPI.VERSION}/response\`,
@@ -2832,51 +3024,67 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"SimpleCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const getCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const getCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const putCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const putCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'PUT',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const postCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const postCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'POST',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const deleteCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const deleteCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'DELETE',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const optionsCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const optionsCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'OPTIONS',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const headCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const headCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'HEAD',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const patchCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const patchCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'PATCH',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
@@ -2946,9 +3154,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"TypesCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const typesCircuitBreaker = new CircuitBreaker((
+const typesCircuitBreaker = new CustomCircuitBreaker((
     parameterArray: Array<string>,
     parameterDictionary: Record<string, string>,
     parameterEnum: 'Success' | 'Warning' | 'Error',
@@ -3094,7 +3318,7 @@ export interface OnCancel {
 }
 
 export class CancelablePromise<T> implements Promise<T> {
-    readonly [Symbol.toStringTag]: string;
+    readonly [Symbol.toStringTag]!: string;
 
     #isPending: boolean;
     #isCancelled: boolean;
@@ -5612,9 +5836,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"CollectionFormatCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const collectionFormatCircuitBreaker = new CircuitBreaker((
+const collectionFormatCircuitBreaker = new CustomCircuitBreaker((
     parameterArrayCsv: Array<string> | null,
     parameterArraySsv: Array<string> | null,
     parameterArrayTsv: Array<string> | null,
@@ -5676,9 +5916,25 @@ import type { ModelWithString } from '../models/ModelWithString';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"ComplexCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const complexTypesCircuitBreaker = new CircuitBreaker((
+const complexTypesCircuitBreaker = new CustomCircuitBreaker((
     parameterObject: {
         first?: {
             second?: {
@@ -5702,7 +5958,7 @@ const complexTypesCircuitBreaker = new CircuitBreaker((
     }) as Promise<Array<ModelWithString>>;
 }, circuitBreakerOptions);
 
-const complexParamsCircuitBreaker = new CircuitBreaker((
+const complexParamsCircuitBreaker = new CustomCircuitBreaker((
     id: number,
     requestBody?: {
         readonly key: string | null;
@@ -5791,9 +6047,25 @@ import type { ModelWithString } from '../models/ModelWithString';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"DefaultsCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const callWithDefaultParametersCircuitBreaker = new CircuitBreaker((
+const callWithDefaultParametersCircuitBreaker = new CustomCircuitBreaker((
     parameterString: string | null = 'Hello World!',
     parameterNumber: number | null = 123,
     parameterBoolean: boolean | null = true,
@@ -5815,7 +6087,7 @@ const callWithDefaultParametersCircuitBreaker = new CircuitBreaker((
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const callWithDefaultOptionalParametersCircuitBreaker = new CircuitBreaker((
+const callWithDefaultOptionalParametersCircuitBreaker = new CustomCircuitBreaker((
     parameterString: string = 'Hello World!',
     parameterNumber: number = 123,
     parameterBoolean: boolean = true,
@@ -5837,7 +6109,7 @@ const callWithDefaultOptionalParametersCircuitBreaker = new CircuitBreaker((
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const callToTestOrderOfParamsCircuitBreaker = new CircuitBreaker((
+const callToTestOrderOfParamsCircuitBreaker = new CustomCircuitBreaker((
     parameterStringWithNoDefault: string,
     parameterOptionalStringWithDefault: string = 'Hello World!',
     parameterOptionalStringWithEmptyDefault: string = '',
@@ -5962,30 +6234,46 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"DuplicateCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const duplicateNameCircuitBreaker = new CircuitBreaker(() => {
+const duplicateNameCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const duplicateName1CircuitBreaker = new CircuitBreaker(() => {
+const duplicateName1CircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'POST',
         path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const duplicateName2CircuitBreaker = new CircuitBreaker(() => {
+const duplicateName2CircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'PUT',
         path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const duplicateName3CircuitBreaker = new CircuitBreaker(() => {
+const duplicateName3CircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'DELETE',
         path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
@@ -6034,9 +6322,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"ErrorCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const testErrorCodeCircuitBreaker = new CircuitBreaker((
+const testErrorCodeCircuitBreaker = new CustomCircuitBreaker((
     status: number,
 ) => {
     return __request({
@@ -6082,9 +6386,25 @@ import type { ModelWithString } from '../models/ModelWithString';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"FormDataCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const postFormDataCircuitBreaker = new CircuitBreaker((
+const postFormDataCircuitBreaker = new CustomCircuitBreaker((
     parameter?: string,
     formData?: ModelWithString,
 ) => {
@@ -6128,9 +6448,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"HeaderCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const callWithResultFromHeaderCircuitBreaker = new CircuitBreaker(() => {
+const callWithResultFromHeaderCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'POST',
         path: \`/api/v\${OpenAPI.VERSION}/header\`,
@@ -6165,9 +6501,25 @@ import type { ModelWithString } from '../models/ModelWithString';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"MultipartCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const multipartRequestCircuitBreaker = new CircuitBreaker((
+const multipartRequestCircuitBreaker = new CustomCircuitBreaker((
     formData?: {
         content?: Blob;
         data?: ModelWithString | null;
@@ -6181,7 +6533,7 @@ const multipartRequestCircuitBreaker = new CircuitBreaker((
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const multipartResponseCircuitBreaker = new CircuitBreaker(() => {
+const multipartResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/multipart\`,
@@ -6237,16 +6589,32 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"MultipleTags1CircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const dummyACircuitBreaker = new CircuitBreaker(() => {
+const dummyACircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const dummyBCircuitBreaker = new CircuitBreaker(() => {
+const dummyBCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
@@ -6283,16 +6651,32 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"MultipleTags2CircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const dummyACircuitBreaker = new CircuitBreaker(() => {
+const dummyACircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const dummyBCircuitBreaker = new CircuitBreaker(() => {
+const dummyBCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
@@ -6329,9 +6713,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"MultipleTags3CircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const dummyBCircuitBreaker = new CircuitBreaker(() => {
+const dummyBCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
@@ -6360,9 +6760,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"NoContentCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const callWithNoContentResponseCircuitBreaker = new CircuitBreaker(() => {
+const callWithNoContentResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/no-content\`,
@@ -6392,9 +6808,25 @@ import type { ModelWithString } from '../models/ModelWithString';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"ParametersCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const callWithParametersCircuitBreaker = new CircuitBreaker((
+const callWithParametersCircuitBreaker = new CustomCircuitBreaker((
     parameterHeader: string | null,
     parameterQuery: string | null,
     parameterForm: string | null,
@@ -6422,7 +6854,7 @@ const callWithParametersCircuitBreaker = new CircuitBreaker((
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const callWithWeirdParameterNamesCircuitBreaker = new CircuitBreaker((
+const callWithWeirdParameterNamesCircuitBreaker = new CustomCircuitBreaker((
     parameterHeader: string | null,
     parameterQuery: string | null,
     parameterForm: string | null,
@@ -6454,7 +6886,7 @@ const callWithWeirdParameterNamesCircuitBreaker = new CircuitBreaker((
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const getCallWithOptionalParamCircuitBreaker = new CircuitBreaker((
+const getCallWithOptionalParamCircuitBreaker = new CustomCircuitBreaker((
     requestBody: ModelWithString,
     parameter?: string,
 ) => {
@@ -6469,7 +6901,7 @@ const getCallWithOptionalParamCircuitBreaker = new CircuitBreaker((
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const postCallWithOptionalParamCircuitBreaker = new CircuitBreaker((
+const postCallWithOptionalParamCircuitBreaker = new CustomCircuitBreaker((
     parameter: string,
     requestBody?: ModelWithString,
 ) => {
@@ -6592,9 +7024,25 @@ import type { ModelWithString } from '../models/ModelWithString';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"RequestBodyCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const postRequestBodyCircuitBreaker = new CircuitBreaker((
+const postRequestBodyCircuitBreaker = new CustomCircuitBreaker((
     parameter?: string,
     requestBody?: ModelWithString,
 ) => {
@@ -6641,16 +7089,32 @@ import type { ModelWithString } from '../models/ModelWithString';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"ResponseCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const callWithResponseCircuitBreaker = new CircuitBreaker(() => {
+const callWithResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/response\`,
     }) as Promise<ModelWithString>;
 }, circuitBreakerOptions);
 
-const callWithDuplicateResponsesCircuitBreaker = new CircuitBreaker(() => {
+const callWithDuplicateResponsesCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'POST',
         path: \`/api/v\${OpenAPI.VERSION}/response\`,
@@ -6662,7 +7126,7 @@ const callWithDuplicateResponsesCircuitBreaker = new CircuitBreaker(() => {
     }) as Promise<ModelWithString>;
 }, circuitBreakerOptions);
 
-const callWithResponsesCircuitBreaker = new CircuitBreaker(() => {
+const callWithResponsesCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'PUT',
         path: \`/api/v\${OpenAPI.VERSION}/response\`,
@@ -6723,51 +7187,67 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"SimpleCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const getCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const getCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'GET',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const putCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const putCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'PUT',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const postCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const postCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'POST',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const deleteCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const deleteCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'DELETE',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const optionsCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const optionsCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'OPTIONS',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const headCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const headCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'HEAD',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
     }) as Promise<void>;
 }, circuitBreakerOptions);
 
-const patchCallWithoutParametersAndResponseCircuitBreaker = new CircuitBreaker(() => {
+const patchCallWithoutParametersAndResponseCircuitBreaker = new CustomCircuitBreaker(() => {
     return __request({
         method: 'PATCH',
         path: \`/api/v\${OpenAPI.VERSION}/simple\`,
@@ -6837,9 +7317,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"TypesCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const typesCircuitBreaker = new CircuitBreaker((
+const typesCircuitBreaker = new CustomCircuitBreaker((
     parameterArray: Array<string> | null,
     parameterDictionary: any,
     parameterEnum: 'Success' | 'Warning' | 'Error' | null,
@@ -6915,9 +7411,25 @@ import CircuitBreaker from 'opossum';
 import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 
+class CustomCircuitBreaker<
+TI extends unknown[] = unknown[],
+TR = unknown
+> extends CircuitBreaker<TI, TR> {
+    async fire(...args: TI): Promise<TR> {
+        try {
+            return await super.fire(...args);
+        } catch (error: unknown) {
+            if (this.name && CircuitBreaker.isOurError(error)) {
+                (error as Error).name = \\"UploadCircuitBreakerError\\";
+            }
+            throw error;
+        }
+    }
+}
+
 const circuitBreakerOptions = undefined;
 
-const uploadFileCircuitBreaker = new CircuitBreaker((
+const uploadFileCircuitBreaker = new CustomCircuitBreaker((
     file: Blob,
 ) => {
     return __request({
