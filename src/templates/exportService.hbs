@@ -12,10 +12,26 @@ import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 {{/if}}
 
+class CustomCircuitBreaker<
+  TI extends unknown[] = unknown[],
+  TR = unknown
+> extends CircuitBreaker<TI, TR> {
+  async fire(...args: TI): Promise<TR> {
+    try {
+      return await super.fire(...args);
+    } catch (error: unknown) {
+      if (this.name && CircuitBreaker.isOurError(error)) {
+        (error as Error).name = "{{{name}}}CircuitBreakerError";
+      }
+      throw error;
+    }
+  }
+}
+
 const circuitBreakerOptions = {{#if circuitBreakerOptions}}{{circuitBreakerOptions}}{{~else}}undefined{{/if}};
 
 {{#each operations}}
-const {{{name}}}CircuitBreaker = new CircuitBreaker(({{>parameters}}) => {
+const {{{name}}}CircuitBreaker = new CustomCircuitBreaker(({{>parameters}}) => {
     return __request({
         method: '{{{method}}}',
         path: `{{{path}}}`,

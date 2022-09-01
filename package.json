@@ -1,6 +1,6 @@
 {
-    "name": "openapi-typescript-codegen",
-    "version": "0.12.5",
+    "name": "@univision/openapi-typescript-codegen",
+    "version": "1.0.0",
     "description": "Library that generates Typescript clients based on the OpenAPI specification.",
     "author": "Ferdi Koomen",
     "homepage": "https://github.com/ferdikoomen/openapi-typescript-codegen",
@@ -67,12 +67,12 @@
         "commander": "^8.3.0",
         "cross-blob": "^2.0.1",
         "form-data": "^4.0.0",
-        "got": "11.8.2",
+        "got": "11.8.5",
         "handlebars": "^4.7.6",
         "json-schema-ref-parser": "^9.0.7",
         "mkdirp": "^1.0.4",
         "node-fetch": "^2.6.5",
-        "opossum": "https://github.com/televisa-univision/opossum.git#6.3.0-custom-error-class",
+        "opossum": "^6.3.0",
         "rimraf": "^3.0.2"
     },
     "devDependencies": {
