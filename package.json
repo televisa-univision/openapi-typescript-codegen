@@ -91,7 +91,7 @@
         "@types/opossum": "^6.2.0",
         "@types/qs": "6.9.7",
         "@typescript-eslint/eslint-plugin": "5.5.0",
-        "@typescript-eslint/parser": "5.5.0",
+        "@typescript-eslint/parser": "5.36.1",
         "codecov": "3.8.3",
         "conventional-changelog-conventionalcommits": "^4.6.1",
         "eslint": "8.3.0",
