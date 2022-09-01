@@ -69,5 +69,8 @@ jobs:
           tar -xvf node_modules.tar
           rm -f node_modules.tar
 
+      - name: Build
+        run: yarn run build
+
       - name: Test
         run: yarn test
